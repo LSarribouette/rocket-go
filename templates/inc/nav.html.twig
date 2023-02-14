@@ -1,11 +1,12 @@
 <nav>
     <a href="{{ path('home_index') }}">Accueil</a>
     {% if app.user %}
-        <a href="{{ path('sortie_dashboard') }}">Sorties</a>
-        <a href="{{ path('app_logout') }}">Se déconnecter</a>
+        <a href="{{ path('sortie_dashboard') }}">Sortir</a>
+        <a href="{{ path('home_profile') }}">Mon profil</a>
+        <a href="{{ path('app_logout') }}">Me déconnecter</a>
     {% else %}
         <a href="{{ path('app_login') }}">Sorties</a>
-        <a href="{{ path('app_login') }}">Se connecter</a>
+        <a href="{{ path('app_login') }}">Me connecter</a>
     {% endif %}
     {% if is_granted("ROLE_ADMIN") %}
         <a href="{{ path('app_register') }}">[admin] Inscrire un participant</a>

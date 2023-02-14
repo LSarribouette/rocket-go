@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1 class="title">Informations du profil</h1>
+    <div>
+        <ul>
+            <li>Prénom : {{ app.user.prenom }}</li>
+            <li>Nom : {{ app.user.nom }}</li>
+            <li>Pseudo : {{ app.user.pseudo }}</li>
+            <li>Adresse email : {{ app.user.email }}</li>
+            <li>Site de rattachement : {{ app.user.site.nom }}</li>
+            <li>Numéro de téléphone :
+                {% if app.user.telephone %}
+                    {{ app.user.telephone }}
+                {% else %}
+                    <em>non renseigné</em>
+                {% endif %}
+            </li>
+        </ul>
+        <br>
+        {% if is_granted("ROLE_ADMIN") %}
+            Informations complémentaires : rôle d'administrateur.e
+        {% endif %}
+    </div><br>
+    <a href="{{ path('home_modify') }}" class="button">Modifier mon profil</a>
+    <a href="" class="button">Réinitialiser mon mot de passe</a>
+{% endblock %}
+
+{% block title %}{{ parent() }} - Profil{% endblock %}
+

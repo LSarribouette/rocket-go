@@ -21,7 +21,18 @@ main {
     height: 100%;
 }
 
+header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: 1%;
+}
+
 nav {
     text-align: center;
-    margin: 1%;
+}
+
+.alert-success {
+    background-color: mistyrose;
+    text-align: center;
 }

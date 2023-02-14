@@ -10,8 +10,18 @@
     <body>
     <header>
         {% include("inc/nav.html.twig") %}
+        <div>
+            Bonjour {% if app.user %}<strong>{{ app.user.pseudo }}</strong>{% endif %} !
+        </div>
     </header>
     <main>
+        {% for label, messages in app.flashes%}
+            {% for message in messages %}
+                <div class="alert-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor%}
+        {% endfor%}
         {% block body %}{% endblock %}
     </main>
     <footer>
