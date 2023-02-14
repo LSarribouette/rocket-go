@@ -39,9 +39,9 @@ class SortieController extends AbstractController
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($rq);
         if($sortieForm->isSubmitted() && $sortieForm->isValid()){
-            $em->persist();
+            $em->persist($sortie);
             $em->flush();
-            return $this->redirectToRoute('sortie');
+            return $this->redirectToRoute('sortie_dashboard');
         }
         return $this->render(
             'sortie/new.html.twig',
