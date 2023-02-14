@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <form class="container box">
+        {{ form_start(sortieForm) }}
+        <div id="errors" class="my-custom-class-for-errors">
+            {# TODO: error management #}
+            {{ form_errors(sortieForm) }}
+        </div>
+        <div id="nom" class="field box has-background-info-light">
+            <label class="label">
+                {{ form_label(sortieForm.nom) }}
+            </label>
+            <div class="control has-icons-left has-icons-right">
+                {{ form_widget(sortieForm.nom, {'attr': {'class':'input'} }) }}
+                <span class="icon is-small is-left">
+              <i class="fas fa-{{ random(['plane', 'dribbble', 'paper-plane', 'ticket', 'palette','gamepad']) }}"></i>
+            </span>
+                <span class="icon is-small is-right">
+              <i class="fas fa-check"></i>
+            </span>
+            </div>
+        </div>
+        <div id="description" class="field box has-background-success-light">
+            <label class="label">
+                {{ form_label(sortieForm.descriptionInfos) }}
+            </label>
+            <div class="control">
+                {{ form_widget(sortieForm.descriptionInfos, {'attr': {'class':'textarea'} }) }}
+            </div>
+        </div>
+        <div id="date-debut" class="field box has-background-success-light">
+            <label class="label">
+                {{ form_label(sortieForm.dateDebut) }}
+            </label>
+            <div class="control">
+                {{ form_widget(sortieForm.dateDebut, {'attr': {'class':'input column is-one-quarter'} }) }}
+            </div>
+        </div>
+        <div id="duree" class="field box has-background-warning-light">
+            <label class="label">
+                {{ form_label(sortieForm.duree) }}
+            </label>
+            <div class="control container">
+                {{ form_widget(sortieForm.duree, {'attr': {'class':''} }) }}
+            </div>
+        </div>
+        <div id="date-cloture" class="field box has-background-danger-light">
+            <label class="label">
+                {{ form_label(sortieForm.dateCloture) }}
+            </label>
+            <div class="control container">
+                {{ form_widget(sortieForm.dateCloture, {'attr': {'class':''} }) }}
+            </div>
+        </div>
+        <div id="nb-inscription" class="field box has-background-danger-light">
+            <label class="label">
+                {{ form_label(sortieForm.nbInscriptionsMax) }}
+            </label>
+            <div class="control container">
+                {{ form_widget(sortieForm.nbInscriptionsMax, {'attr': {'class':''} }) }}
+            </div>
+        </div>
+        <div id="url-photo" class="field box">
+            <label class="label">
+                {{ form_label(sortieForm.urlPhoto) }}
+            </label>
+            <div class="control container">
+                {{ form_widget(sortieForm.urlPhoto, {'attr': {'class':''} }) }}
+            </div>
+        </div>
+        <div id="submit" class="field is-grouped">
+            <div class="control">
+                {{ form_widget(sortieForm.submit, {'attr': {'class':'button is-primary'} }) }}
+            </div>
+            <div class="control">
+                <input type="reset" value="Annuler" class="button is-link is-light"></input>
+            </div>
+        </div>
+        {{ form_end(sortieForm) }}
+    </form>
+{% endblock %}
+
+
