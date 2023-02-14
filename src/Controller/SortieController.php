@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SortieController extends AbstractController
 {
-    //TODO : main view sortie (listAll...)
+    //TODO : gerer le user connected
     #[Route('/', name: '_dashboard')]
     public function dashboard(
         SortieRepository $sortieRepository
