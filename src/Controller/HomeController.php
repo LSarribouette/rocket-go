@@ -30,7 +30,6 @@ class HomeController extends AbstractController
     ): Response
     {
         $participant = $this->getUser();
-        dump($participant);
         $participantForm = $this->createForm(ParticipantFormType::class, $participant);
         $participantForm->handleRequest($request);
         if ($participantForm->isSubmitted() && $participantForm->isValid()) {
