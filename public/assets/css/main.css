@@ -1,0 +1,27 @@
+@font-face {
+    src: url("fonts/Luciole-Regular.ttf");
+    font-family: "Luciole-Regular";
+}
+
+html, body {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: Luciole-Regular, Tahoma, Verdana, sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 15%;
+}
+
+main {
+    height: 100%;
+}
+
+nav {
+    text-align: center;
+    margin: 1%;
+}
