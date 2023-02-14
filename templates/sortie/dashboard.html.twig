@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sortir avec l'ENI !{% endblock %}
+
+{% block body %}
+    TODO NAVBAR
+    <h1>Hello, quand est-ce qu'on sort ? ✅</h1>
+
+    {% set nombreSortie = sorties|length %}
+
+            <section class="main container is-flex">
+        {% for index, sortie in sorties%}
+            <div class="card box">
+            <div class="card-image">
+                <figure class="image is-4by3">
+                    {% if sortie.urlPhoto and sortie.urlPhoto != "null" %}
+                    <img src="{{ sortie.urlPhoto}}" alt="photo présentant la sortie">
+                    {% else %}
+                    <img src="https://picsum.photos/400/300" alt="Placeholder image">
+                    {% endif %}
+                </figure>
+            </div>
+            <div class="card-content">
+                <div class="media">
+                    <div class="media-left">
+                        <figure class="image is-48x48">
+                            <img src="https://loremflickr.com/96/96" alt="Placeholder image">
+                        </figure>
+                    </div>
+                    <div class="media-content">
+                        <p class="title is-4 has-text-link">
+                            {{ sortie.nom|capitalize }}
+                        </p>
+                        <p class="subtitle is-6 has-text-danger">
+                            nombre de place : {{ sortie.nbInscriptionsMax }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="content">
+                    {{ sortie.descriptionInfos }}
+                    <br>
+                    <a>@mailOrganisateur</a>
+                    <p class="has-background-{{ random(['danger', 'warning', 'success', 'primary']) }}-light">
+                    DU
+                    <time class="has-text-primary">{{ sortie.dateDebut | format_datetime('full', 'short',locale='fr') }}</time>
+                        <br>
+                        AU
+                    <time class="has-text-danger">{{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</time>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+            </section>
+{% endblock %}
