@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <form class="container box">
+    <div class="container box">
         {{ form_start(sortieForm) }}
         <div id="errors" class="my-custom-class-for-errors">
             {# TODO: error management #}
@@ -29,6 +29,40 @@
                 {{ form_widget(sortieForm.descriptionInfos, {'attr': {'class':'textarea'} }) }}
             </div>
         </div>
+        {# TODO : atteindre la ville #}
+        {#
+        <div id="ville" class="field">
+            <p class="control has-icons-left">
+                <label class="label">
+                    {{ form_label(sortieForm.ville) }}
+                </label>
+                <span class="select">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-city"></i>
+                    </span>
+                    <option>
+                        {{ form_widget(sortieForm.ville, {'attr': {'class':'has-background-success-light'} }) }}
+                    </option>
+                </span>
+            </p>
+        </div>
+        #}
+        <div id="lieu" class="field">
+            <p class="control has-icons-left">
+                <label class="label">
+                    {{ form_label(sortieForm.lieu) }}
+                </label>
+                <span class="select">
+                    <span class="icon is-small is-left">
+                        <i class="fas fa-location-dot"></i>
+                    </span>
+                    <option>
+                        {{ form_widget(sortieForm.lieu, {'attr': {'class':'has-background-success-light'} }) }}
+                    </option>
+                </span>
+            </p>
+        </div>
+
         <div id="date-debut" class="field box has-background-success-light">
             <label class="label">
                 {{ form_label(sortieForm.dateDebut) }}
@@ -70,15 +104,20 @@
             </div>
         </div>
         <div id="submit" class="field is-grouped">
-            <div class="control">
+
+            <div type="submit" class="control">
                 {{ form_widget(sortieForm.submit, {'attr': {'class':'button is-primary'} }) }}
             </div>
+
             <div class="control">
                 <input type="reset" value="Annuler" class="button is-link is-light"></input>
             </div>
         </div>
         {{ form_end(sortieForm) }}
-    </form>
+    </div>
+
+    {{ dump(sortieForm.duree) }}
+
 {% endblock %}
 
 
