@@ -2,29 +2,26 @@
 
 namespace App\Form;
 
-use App\Entity\Participant;
-use App\Entity\Site;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ParticipantFormType extends AbstractType
+class ResetPasswordRequestFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('prenom')
-            ->add('nom')
-            ->add('pseudo')
-            ->add('email')
-            ->add('site', EntityType::class, [
-                'class' => Site::class,
-                'choice_label' => 'nom',
-                'label' => 'Site'
+            ->add('email', EmailType::class, [
+                'attr' => ['autocomplete' => 'email'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => "Renseigner l'adresse email",
+                    ]),
+                ],
             ])
-            ->add('telephone')
             ->add('submit',
                 type: SubmitType::class,
                 options: [
@@ -34,8 +31,6 @@ class ParticipantFormType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'data_class' => Participant::class,
-        ]);
+        $resolver->setDefaults([]);
     }
 }
