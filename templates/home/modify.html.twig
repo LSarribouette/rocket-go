@@ -3,8 +3,8 @@
 {% block body %}
     {{ form_start(participantForm) }}
     {{ form_widget(participantForm) }}
-    <button>OK</button>
     {{ form_end(participantForm) }}
+    <a href="{{ path('home_profile') }}">< Retour</a>
 {% endblock %}
 
 {% block title %}{{ parent() }} - Modifier mon profil{% endblock %}
