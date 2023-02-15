@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\ChangePasswordFormType;
 use App\Form\ParticipantFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,6 +41,26 @@ class HomeController extends AbstractController
         }
         return $this->render('home/modify.html.twig',
             compact('participantForm')
+        );
+    }
+
+    #[Route('/profile/password', name: 'home_password')]
+    public function modifyPassword(
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response
+    {
+        $participant = $this->getUser();
+        $passwordForm = $this->createForm(ChangePasswordFormType::class, $participant);
+        $passwordForm->handleRequest($request);
+        if ($passwordForm->isSubmitted() && $passwordForm->isValid()) {
+            $entityManager->persist($participant);
+            $entityManager->flush();
+            $this->addFlash('success', 'Mot de passe mis à jour !');
+            return $this->redirectToRoute('home_profile');
+        }
+        return $this->render('home/password.html.twig',
+            compact('passwordForm')
         );
     }
 }
