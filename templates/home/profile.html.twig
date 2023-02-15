@@ -23,7 +23,7 @@
         {% endif %}
     </div><br>
     <a href="{{ path('home_modify') }}" class="button">Modifier mon profil</a>
-    <a href="" class="button">Réinitialiser mon mot de passe</a>
+    <a href="{{ path('home_password') }}" class="button">Modifier mon mot de passe</a>
 {% endblock %}
 
 {% block title %}{{ parent() }} - Profil{% endblock %}
