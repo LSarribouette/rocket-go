@@ -3,8 +3,10 @@
 {% block title %}Sortir avec l'ENI !{% endblock %}
 
 {% block body %}
-    TODO NAVBAR
+
     <h1>Hello, quand est-ce qu'on sort ? ✅</h1>
+
+    <a class="button" href="{{ path('sortie_create') }}">Proposer une Sortie ! </a>
 
     {% set nombreSortie = sorties|length %}
 
@@ -48,7 +50,6 @@
                         AU
                     <time class="has-text-danger">{{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</time>
                     </p>
-
                 </div>
             </div>
         </div>
