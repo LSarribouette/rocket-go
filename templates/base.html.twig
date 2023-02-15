@@ -1,32 +1,26 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <link rel="icon" href="{{ asset('assets/media/favicon-team-rocket-02.jpg') }}">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-        <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
-        <title>{% block title %}ROCKET GO{% endblock %}</title>
-    </head>
-    <body>
-    <header>
-        {% include("inc/nav.html.twig") %}
-        <div>
-            Bonjour {% if app.user %}<strong>{{ app.user.pseudo }}</strong>{% endif %} !
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="{{ asset('assets/media/favicon-team-rocket-02.jpg') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
+    <title>{% block title %}ROCKET GO{% endblock %}</title></head>
+<body>
+<header>        {% include("inc/nav.html.twig") %}
+    <div> Bonjour {% if app.user %}<strong>{{ app.user.pseudo }}</strong>{% endif %} !</div>
+</header>
+<main>
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+        <div class="alert-{{ label }}">
+            {{ message }}
         </div>
-    </header>
-    <main>
-        {% for label, messages in app.flashes%}
-            {% for message in messages %}
-                <div class="alert-{{ label }}">
-                    {{ message }}
-                </div>
-            {% endfor%}
-        {% endfor%}
-        {% block body %}{% endblock %}
-    </main>
-    <footer>
-        {% include("inc/nav.html.twig") %}
-    </footer>
-    <script src="https://kit.fontawesome.com/ed8d6cd9d5.js" crossorigin="anonymous"></script>
-    </body>
-</html>
+    {% endfor %}
+    {% endfor %}
+    {% block body %}{% endblock %}
+</main>
+<footer>        {% include("inc/nav.html.twig") %}    </footer>
+<script src="https://kit.fontawesome.com/ed8d6cd9d5.js" crossorigin="anonymous"></script>
+</body>
+</html>Z
