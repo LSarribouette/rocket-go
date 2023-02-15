@@ -7,20 +7,32 @@
     <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
     <title>{% block title %}ROCKET GO{% endblock %}</title></head>
 <body>
-<header>        {% include("inc/nav.html.twig") %}
-    <div> Bonjour {% if app.user %}<strong>{{ app.user.pseudo }}</strong>{% endif %} !</div>
-</header>
-<main>
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-        <div class="alert-{{ label }}">
-            {{ message }}
-        </div>
-    {% endfor %}
-    {% endfor %}
-    {% block body %}{% endblock %}
-</main>
-<footer>        {% include("inc/nav.html.twig") %}    </footer>
-<script src="https://kit.fontawesome.com/ed8d6cd9d5.js" crossorigin="anonymous"></script>
+    <header>
+        {% include("inc/nav.html.twig") %}
+        <div> Bonjour {% if app.user %}<strong>{{ app.user.pseudo }}</strong>{% endif %} !</div>
+    </header>
+    <main>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+            <div class="alert-{{ label }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endfor %}
+
+        {% block body %}{% endblock %}
+    </main>
+{#
+    déso, pour l'instant on aura pas de footer,
+    parcequ'il se fout au milieu de la page
+    parceque j'ai passé trop de tamps a pas regler ce pb
+    parceque maintenant j'ai faim
+    laissez moi sortir.
+
+    <footer class="footer">
+        {% include("inc/nav.html.twig") %}
+    </footer>
+#}
+    <script src="https://kit.fontawesome.com/ed8d6cd9d5.js" crossorigin="anonymous"></script>
 </body>
-</html>Z
+</html>

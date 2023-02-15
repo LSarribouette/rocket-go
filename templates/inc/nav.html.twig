@@ -1,5 +1,6 @@
+{# TODO : virer ce code, mais pour linstant matrice lisible pratique #}
+{#
 <nav>
-    <a href="{{ path('home_index') }}">Accueil</a>
     {% if app.user %}
         <a href="{{ path('sortie_dashboard') }}">Sortir</a>
         <a href="{{ path('home_profile') }}">Mon profil</a>
@@ -12,3 +13,36 @@
         <a href="{{ path('app_register') }}">[admin] Inscrire un participant</a>
     {% endif %}
 </nav>
+#}
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img src="{{ asset('assets/media/favicon-team-rocket-02.jpg') }}">
+        </a>
+
+        <div class="navbar-menu">
+            <div class="navbar-start">
+
+                {% if app.user %}
+                    <a class="navbar-item" href="{{ path('sortie_dashboard') }}">Sortir</a>
+                    <a class="navbar-item" href="{{ path('home_profile') }}">Mon profil</a>
+                {% endif %}
+                {% if not app.user %}
+                    <a  class="navbar-item" href="{{ path('app_login') }}">Sorties</a>
+                {% endif %}
+
+                <div class="buttons">
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <a class="button has-text-primary" href="{{ path('app_register') }}">[admin] Inscrire un participant</a>
+                    {% endif %}
+                    {% if app.user %}
+                        <a class="button is-warning" href="{{ path('app_logout') }}">Me déconnecter</a>
+                    {% endif %}
+                    {% if not app.user %}
+                        <a  class="button is-primary" href="{{ path('app_login') }}">Me connecter</a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </nav>
