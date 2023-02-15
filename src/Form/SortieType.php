@@ -97,8 +97,6 @@ class SortieType extends AbstractType
             )
 //TODO :    ->add('etat')
 //TODO :    ->add('lieu')
-//TODO :    ->add('organisateur')
-//TODO :    ->add('participantsInscrits')
             ->add('submit',
                 type: SubmitType::class,
                 options: [

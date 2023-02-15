@@ -36,6 +36,7 @@ class SortieController extends AbstractController
     ): Response
     {
         $sortie = new Sortie();
+        $sortie->setOrganisateur($this->getUser());
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($rq);
         if($sortieForm->isSubmitted() && $sortieForm->isValid()){
