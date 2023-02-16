@@ -13,7 +13,6 @@ class SiteType extends AbstractType
     {
         $builder
             ->add('nom')
-            ->add('sorties')
         ;
     }
 

@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Form\ChangePasswordFormType;
-use App\Form\ParticipantFormType;
+use App\Form\ProfileType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,17 +30,17 @@ class HomeController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response
     {
-        $participant = $this->getUser();
-        $participantForm = $this->createForm(ParticipantFormType::class, $participant);
-        $participantForm->handleRequest($request);
-        if ($participantForm->isSubmitted() && $participantForm->isValid()) {
-            $entityManager->persist($participant);
+        $profile = $this->getUser();
+        $profileForm = $this->createForm(ProfileType::class, $profile);
+        $profileForm->handleRequest($request);
+        if ($profileForm->isSubmitted() && $profileForm->isValid()) {
+            $entityManager->persist($profile);
             $entityManager->flush();
             $this->addFlash('success', 'Informations du profil mises à jour !');
             return $this->redirectToRoute('home_profile');
         }
         return $this->render('home/modify.html.twig',
-            compact('participantForm')
+            compact('profileForm')
         );
     }
 

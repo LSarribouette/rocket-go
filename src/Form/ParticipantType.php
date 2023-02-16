@@ -3,7 +3,11 @@
 namespace App\Form;
 
 use App\Entity\Participant;
+use App\Entity\Site;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -12,15 +16,27 @@ class ParticipantType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
-            ->add('roles')
-            ->add('password')
-            ->add('pseudo')
-            ->add('nom')
             ->add('prenom')
+            ->add('nom')
+            ->add('pseudo')
+            ->add('email')
+            ->add('site', EntityType::class, [
+                'class' => Site::class,
+                'choice_label' => 'nom',
+                'label' => 'Site'
+            ])
             ->add('telephone')
-            ->add('site')
-            ->add('inscriptions')
+            ->add('isAdmin', CheckboxType::class, [
+                'mapped' => false,
+                'label'    => 'Rôle administrateur.e ?',
+                'required' => false,
+
+            ])
+            ->add('submit',
+                type: SubmitType::class,
+                options: [
+                    'label' => 'OK'
+                ])
         ;
     }
 
