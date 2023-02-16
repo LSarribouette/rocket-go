@@ -67,8 +67,10 @@
                             <br>
                             AU
                             <time class="has-text-primary">
-                                {{ sortie.dateDebut | format_datetime('full', 'short',locale='fr') }} + {{ sortie.duree }}
+                                {{ sortie.dateDebut | date_modify('+'~sortie.duree~' min') | format_datetime('full', 'short',locale='fr') }}
                             </time>
+                            <br>
+                            Durée : {{ sortie.duree }} minutes
                         </p>
                         <p class="has-background-warning-light box">
                         Fin des incriptions le :
