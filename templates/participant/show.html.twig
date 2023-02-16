@@ -20,10 +20,6 @@
                 <td>{{ participant.roles ? participant.roles|json_encode : '' }}</td>
             </tr>
             <tr>
-                <th>Password</th>
-                <td>{{ participant.password }}</td>
-            </tr>
-            <tr>
                 <th>Pseudo</th>
                 <td>{{ participant.pseudo }}</td>
             </tr>
@@ -42,7 +38,7 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_participant_index') }}">back to list</a>
+    <a href="{{ path('home_administration') }}">back to list</a>
 
     <a href="{{ path('app_participant_edit', {'id': participant.id}) }}">edit</a>
 
