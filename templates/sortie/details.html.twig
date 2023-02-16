@@ -10,7 +10,6 @@
             {% set placesDispo = ((sortie.nbInscriptionsMax) - (sortie.participantsInscrits | length))  %}
             {%  if placesDispo <= 0 %}
             <div class="notification is-danger is-light">
-                <button class="delete"></button>
                 <p class="subtitle">
                 Malheureusement <strong>vous ne pouvez pas</strong> vous Inscrire, il n'y a plus de place :(
                 </p>
