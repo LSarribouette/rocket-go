@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Administration{% endblock %}
+
+{% block body %}
+    <h1 class="title">Panneau d'administration</h1>
+    <div>
+        <a href="{{ path('app_participant_index') }}" class="button is-light">Gérer les participants</a>
+        <a href="{{ path('app_site_index') }}" class="button is-light">Gérer les sites</a>
+        <a href="{{ path('app_ville_index') }}" class="button is-light">Gérer les villes</a>
+    </div>
+{% endblock %}

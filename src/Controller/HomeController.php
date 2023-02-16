@@ -63,4 +63,11 @@ class HomeController extends AbstractController
             compact('passwordForm')
         );
     }
+
+    #[Route('/admin', name: 'home_administration')]
+    public function adminPanel(): Response
+    {
+        return $this->render('home/administration.html.twig');
+    }
+
 }
