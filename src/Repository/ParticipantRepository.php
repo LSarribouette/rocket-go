@@ -95,6 +95,8 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+//TODO : faire des tests de vitesses de rendu de page, pas besoin de ça en effet, mais on garde peut etre pour les performances des rq sur DB?
     public function findOneOrganisateurById($sortieOrganisateurID)
     {
         return $this->createQueryBuilder('p')

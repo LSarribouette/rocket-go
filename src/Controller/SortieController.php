@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Etat;
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
@@ -86,6 +87,48 @@ class SortieController extends AbstractController
             'sortie/details.html.twig',
             compact("sortie", "organisateur")
         );
+    }
+    #[Route('/sinscrire/{id}', name: '_inscrireParticipant')]
+    public function inscrireParticipant(
+        SortieRepository $sortieRepository,
+        ParticipantRepository $participantRepository,
+        EntityManagerInterface $em,
+        int $id,
+    ): Response
+    {
+        $sortie = $sortieRepository->findOneBy(["id" => $id]);
+        $participant = $participantRepository->findOneBy(["email"=>$this->getUser()->getUserIdentifier()]);
+        //check si il reste de la place pour s"inscrire
+        if(
+            ($sortie->getParticipantsInscrits()->count()) < ($sortie->getNbInscriptionsMax())
+        ){
+            //Check si currentUser est déjà inscrit
+            if(
+                $sortie->getParticipantsInscrits()->contains($participant)
+            ) {
+                //message de type non T DEJA INSCRI
+                $type = "danger";
+                $message = "Vous semblez déjà inscrit à cette activité";
+                $this->addFlash($type, $message);
+                return $this->redirectToRoute('sortie_details', ['id'=>$id]);
+
+            } else {
+                $sortie->addParticipantsInscrit($participant);
+                $em->persist($sortie);
+                $em->flush();
+                //message de type ok
+                $type = "success";
+                $message = "Vous avez bien été inscrit !";
+                $this->addFlash($type, $message);
+                return $this->redirectToRoute('sortie_dashboard');
+            }
+        } else {
+            //message de type non APLUDPLACE
+            $type = "danger";
+            $message = "Il n'y a plus de place, l'inscription a échouée";
+            $this->addFlash($type, $message);
+            return $this->redirectToRoute('sortie_dashboard');
+        }
     }
 
 }

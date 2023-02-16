@@ -14,14 +14,19 @@
             </p>
         </div>
     </section>
-
+    <div class="container">
     {% set nombreSortie = sorties|length %}
        {% for index, sortie in sorties %}
            {% if loop.first %}
             <section class="columns">
            {% endif %}
-            <div class="column">
-                <div class="card-image">
+           {% set placeDispos = sortie.nbInscriptionsMax - (sortie.participantsInscrits | length) %}
+           {% if placeDispos <= 0 %}
+           <div id="sortie-{{ index }}" class="column m-4 has-background-danger-light">
+           {% else %}
+           <div id="sortie-{{ index }}" class="column box m-4">
+           {% endif %}
+                <div class="card-image p-4">
                     <figure class="image is-4by3">
                         {% if sortie.urlPhoto and sortie.urlPhoto != "null" %}
                         <img src="{{ sortie.urlPhoto}}" alt="photo présentant la sortie">
@@ -42,13 +47,13 @@
                                 {{ sortie.nom|capitalize }}
                             </p>
                             <p class="subtitle is-6 has-text-danger">
-                                nombre de place : {{ sortie.nbInscriptionsMax }}
+                                nombre de place réservées: {{ sortie.participantsInscrits | length }} <strong>/</strong> {{ sortie.nbInscriptionsMax }}
                             </p>
                         </div>
                     </div>
                     <div class="content">
                         <br>
-                        <p class="has-background-{{ random(['danger', 'warning', 'success', 'primary']) }}-light">
+                        <p class="has-background-info-light">
                         DU
                         <time class="has-text-primary">{{ sortie.dateDebut | format_datetime('full', 'short',locale='fr') }}</time>
                             <br>
@@ -58,7 +63,11 @@
                         <a href="{{ path('sortie_details', {'id': sortie.id}) }}" class="button">En Savoir +</a>
                     </div>
                 </div>
+           {% if placeDispos <= 0 %}
             </div>
+           {% else %}
+           </div>
+           {% endif %}
             {% if loop.index % 3 == 0 %}
             </section><section class="columns">
             {% endif %}
@@ -66,4 +75,5 @@
             </section>
             {% endif %}
             {% endfor %}
+    </div>
 {% endblock %}

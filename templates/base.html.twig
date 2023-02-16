@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="{{ asset('assets/media/favicon-team-rocket-02.jpg') }}">
@@ -15,7 +15,7 @@
 
     {% for label, messages in app.flashes %}
         {% for message in messages %}
-            <div class="alert-{{ label }}">
+            <div class="notification is-{{ label }} is-light alert has-text-centered">
                 {{ message }}
             </div>
         {% endfor %}

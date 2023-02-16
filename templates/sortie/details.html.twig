@@ -1,8 +1,34 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="card box">
-        <div class="card-image">
+    <section class="hero">
+        <div class="hero-body">
+            <p class="title">
+                Infos de la Sortie {{ sortie.nom|capitalize }}
+            </p>
+            <a class="button box has-text-centered" href="{{ path('sortie_create') }}">Proposer une Sortie ! </a>
+            {% set placesDispo = ((sortie.nbInscriptionsMax) - (sortie.participantsInscrits | length))  %}
+            {%  if placesDispo <= 0 %}
+            <div class="notification is-danger is-light">
+                <button class="delete"></button>
+                <p class="subtitle">
+                Malheureusement <strong>vous ne pouvez pas</strong> vous Inscrire, il n'y a plus de place :(
+                </p>
+            </div>
+            {%  else %}
+                <div class="notification is-primary is-light">
+                    <button class="delete"></button>
+                    <p class="subtitle">
+                        <strong class="has-text-primary">Vous pouvez</strong> vous inscrire, il reste
+                        <strong class="has-text-primary"> {{ placesDispo }} </strong> places !
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <div class="card container is-flex is-justify-space-between">
+        <div class="card-image column is-3">
             <figure class="image is-4by3">
                 {% if sortie.urlPhoto and sortie.urlPhoto != "null" %}
                     <img src="{{ sortie.urlPhoto}}" alt="photo présentant la sortie">
@@ -27,7 +53,7 @@
                         <a href="mailto:{{ organisateur.email }}">@{{ organisateur.email }}</a>
                     </p>
                     <p class="subtitle is-6 has-text-danger">
-                        nombre de place : {{ sortie.nbInscriptionsMax }}
+                        nombre de place restantes : {{ placesDispo }} / {{ sortie.nbInscriptionsMax }}
                     </p>
                 </div>
             </div>
@@ -43,13 +69,13 @@
                     <time class="has-text-danger">{{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</time>
                 </p>
             </div>
+            {%  if placesDispo <= 0 %}
+                <a  class="button is-danger" title="Disabled button" disabled>Il n'y a plus de place</a>
+            {% else %}
+                <a class="button" href="{{ path('sortie_inscrireParticipant', {'id': sortie.id}) }}">S'inscrire !</a>
+            {% endif %}
         </div>
     </div>
-
-    <button>
-        S'inscrire
-    </button>
-
 
 {% endblock %}
 
