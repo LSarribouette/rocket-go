@@ -13,14 +13,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/site')]
 class SiteController extends AbstractController
 {
-    #[Route('/', name: 'app_site_index', methods: ['GET'])]
-    public function index(SiteRepository $siteRepository): Response
-    {
-        return $this->render('site/index.html.twig', [
-            'sites' => $siteRepository->findAll(),
-        ]);
-    }
-
     #[Route('/new', name: 'app_site_new', methods: ['GET', 'POST'])]
     public function new(Request $request, SiteRepository $siteRepository): Response
     {
@@ -31,7 +23,7 @@ class SiteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $siteRepository->save($site, true);
 
-            return $this->redirectToRoute('app_site_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('home_administration');
         }
 
         return $this->renderForm('site/new.html.twig', [
@@ -57,7 +49,7 @@ class SiteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $siteRepository->save($site, true);
 
-            return $this->redirectToRoute('app_site_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('home_administration');
         }
 
         return $this->render('site/edit.html.twig', [
@@ -73,6 +65,6 @@ class SiteController extends AbstractController
             $siteRepository->remove($site, true);
         }
 
-        return $this->redirectToRoute('app_site_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('home_administration');
     }
 }

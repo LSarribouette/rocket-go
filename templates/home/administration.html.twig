@@ -5,8 +5,20 @@
 {% block body %}
     <h1 class="title">Panneau d'administration</h1>
     <div>
-        <a href="{{ path('app_participant_index') }}" class="button is-light">Gérer les participants</a>
-        <a href="{{ path('app_site_index') }}" class="button is-light">Gérer les sites</a>
-        <a href="{{ path('app_ville_index') }}" class="button is-light">Gérer les villes</a>
+        <button class="button is-light" onclick="afficheListe('participants')" id="participantsBouton">Gérer les participants</button>
+        <button class="button is-light" onclick="afficheListe('sites')" id="sitesBouton">Gérer les sites</button>
+        <button class="button is-light" onclick="afficheListe('villes')" id="villesBouton">Gérer les villes</button>
     </div>
+    <br>
+    <div id="participants" hidden>
+        {% include 'participant/index.html.twig' %}
+    </div>
+    <div id="sites" hidden>
+        {% include 'site/index.html.twig' %}
+    </div>
+    <div id="villes" hidden>
+        {% include 'ville/index.html.twig' %}
+    </div>
+
+    <script src="{{ asset('assets/javascript/adminboard.js') }}"></script>
 {% endblock %}

@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Form\ChangePasswordFormType;
 use App\Form\ProfileType;
+use App\Repository\ParticipantRepository;
+use App\Repository\SiteRepository;
+use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,9 +68,17 @@ class HomeController extends AbstractController
     }
 
     #[Route('/admin', name: 'home_administration')]
-    public function adminPanel(): Response
+    public function adminPanel(
+        ParticipantRepository $participantRepository,
+        SiteRepository $siteRepository,
+        VilleRepository $villeRepository
+    ): Response
     {
-        return $this->render('home/administration.html.twig');
+        return $this->render('home/administration.html.twig', [
+            'participants' => $participantRepository->findAll(),
+            'sites' => $siteRepository->findAll(),
+            'villes' => $villeRepository->findAll()
+        ]);
     }
 
 }
