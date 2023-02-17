@@ -8,31 +8,61 @@ html, body {
     padding: 0;
     margin: 0;
     font-family: Luciole-Regular, Tahoma, Verdana, sans-serif;
+    scroll-behavior: smooth;
 }
 
 body {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding: 0 15%;
+    /*padding: 0 15%;*/
 }
 
 main {
-    height: 100%;
+    /*height: 100%;*/
+    flex: 1 1 auto;
+    margin: 2% 15% !important;
+    /*padding: 0 15%;*/
+    /*overflow-y: auto;*/
+
 }
 
 header {
+    flex: 0 0 auto;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    margin: 1%;
+    padding: 1%;
+
+    background-color: mistyrose;
+    color: #C70039;
+}
+
+footer {
+    flex: 0 0 auto;
+    padding: 1%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 nav {
     text-align: center;
 }
+    nav > a {
+        background-color: white;
+        color: #C70039 ;
+        border-radius: 10px;
+        padding: 5px;
+    }
+        nav > a:hover {
+            background-color: #C70039 ;
+            color: white;
+        }
 
 .alert-success {
     background-color: mistyrose;
     text-align: center;
 }
+
+.bg-colored { background-color: mistyrose !important; }

@@ -1,12 +1,13 @@
 {% block body %}
-    <h1>Site index</h1>
+    <section class="box">
+    <h2 class="title is-6">Liste des sites</h2>
 
-    <table class="table">
+    <table class="table is-hoverable">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Identifiant</th>
                 <th>Nom</th>
-                <th>actions</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -15,17 +16,18 @@
                 <td>{{ site.id }}</td>
                 <td>{{ site.nom }}</td>
                 <td>
-                    <a href="{{ path('app_site_show', {'id': site.id}) }}">show</a>
-                    <a href="{{ path('app_site_edit', {'id': site.id}) }}">edit</a>
+                    <a class="button is-light is-small is-primary" href="{{ path('app_site_show', {'id': site.id}) }}">Détails</a>
+                    <a class="button is-light is-small is-warning" href="{{ path('app_site_edit', {'id': site.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="3">no records found</td>
+                <td colspan="3">Il n'y a pas de sites.</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_site_new') }}">Create new</a>
+    <a class="button is-light is-success" href="{{ path('app_site_new') }}">Ajouter un nouveau site</a>
+    </section>
 {% endblock %}

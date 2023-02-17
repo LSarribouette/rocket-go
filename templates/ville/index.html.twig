@@ -1,13 +1,14 @@
 {% block body %}
-    <h1>Ville index</h1>
+    <section class="box">
+    <h2 class="title is-6">Liste des villes</h2>
 
-    <table class="table">
+    <table class="table is-hoverable">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Identifiant</th>
                 <th>Nom</th>
-                <th>CodePostal</th>
-                <th>actions</th>
+                <th>Code postal</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -17,17 +18,18 @@
                 <td>{{ ville.nom }}</td>
                 <td>{{ ville.codePostal }}</td>
                 <td>
-                    <a href="{{ path('app_ville_show', {'id': ville.id}) }}">show</a>
-                    <a href="{{ path('app_ville_edit', {'id': ville.id}) }}">edit</a>
+                    <a class="button is-light is-small is-primary" href="{{ path('app_ville_show', {'id': ville.id}) }}">Détails</a>
+                    <a class="button is-light is-small is-warning" href="{{ path('app_ville_edit', {'id': ville.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="4">Il n'y a pas de villes.</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_ville_new') }}">Create new</a>
+    <a class="button is-light is-small is-success" href="{{ path('app_ville_new') }}">Ajouter une nouvelle ville</a>
+    </section>
 {% endblock %}

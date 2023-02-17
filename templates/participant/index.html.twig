@@ -1,17 +1,18 @@
 {% block body %}
+    <section class="box">
     <h2 class="title is-6">Liste des participants</h2>
 
     <table class="table is-hoverable">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Identifiant</th>
                 <th>Email</th>
-                <th>Roles</th>
+                <th>Rôles</th>
                 <th>Pseudo</th>
                 <th>Nom</th>
-                <th>Prenom</th>
-                <th>Telephone</th>
-                <th>actions</th>
+                <th>Prénom</th>
+                <th>Téléphone</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -25,17 +26,18 @@
                 <td>{{ participant.prenom }}</td>
                 <td>{{ participant.telephone }}</td>
                 <td>
-                    <a href="{{ path('app_participant_show', {'id': participant.id}) }}">show</a>
-                    <a href="{{ path('app_participant_edit', {'id': participant.id}) }}">edit</a>
+                    <a class="button is-light is-small is-primary" href="{{ path('app_participant_show', {'id': participant.id}) }}">Détails</a>
+                    <a class="button is-light is-small is-warning" href="{{ path('app_participant_edit', {'id': participant.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="9">no records found</td>
+                <td colspan="9">Il n'y a pas de participants.</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('app_participant_new') }}">Create new</a>
+    <a class="button is-light is-success" href="{{ path('app_participant_new') }}">Ajouter un nouveau participant</a>
+    </section>
 {% endblock %}
