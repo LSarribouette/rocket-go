@@ -215,5 +215,17 @@ class SortieController extends AbstractController
         }
 
     }
+    #[Route('/mes-sorties', name: '_messorties')]
+    public function dashboardMesSorties(
+        SortieRepository $sortieRepository,
+    ): Response
+    {
+        $sorties = $sortieRepository->findAll();
+        $nowAsDateTimeObject = new \DateTime('now', new DateTimeZone('Europe/Paris'));
 
+        return $this->render(
+            'sortie/mes-sorties.html.twig',
+            compact("sorties", "nowAsDateTimeObject")
+        );
+    }
 }

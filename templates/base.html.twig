@@ -10,7 +10,6 @@
 <body>
 <header>
     {% include("inc/nav.html.twig") %}
-    <div>Bonjour {% if app.user %}<strong>{{ app.user.pseudo }}</strong>{% endif %} !</div>
 </header>
 <main class="container">
     {% for label, messages in app.flashes %}
