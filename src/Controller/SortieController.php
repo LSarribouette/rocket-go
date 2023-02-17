@@ -116,13 +116,14 @@ class SortieController extends AbstractController
             }
 
 //TODO : facto ce code de type tartine, voire faire une function checkForm()
+//TODO : faudrait checker de pas pouvoir créer DEUX FOIS la m
 
             if($sortieForm->isValid()){
                 $em->persist($sortie);
                 $em->flush();
+                $type = "success";
+                $this->addFlash($type, "La sortie a bien été créée :) ");
                 return $this->redirectToRoute('sortie_dashboard');
-            } else {
-                var_dump($sortie);
             }
         }
         return $this->render(
@@ -177,15 +178,42 @@ class SortieController extends AbstractController
                 $type = "success";
                 $message = "Vous avez bien été inscrit !";
                 $this->addFlash($type, $message);
-                return $this->redirectToRoute('sortie_dashboard');
+                return $this->redirectToRoute('sortie_details', ['id'=>$id]);
             }
         } else {
             //message de type non APLUDPLACE
             $type = "danger";
             $message = "Il n'y a plus de place, l'inscription a échouée";
             $this->addFlash($type, $message);
-            return $this->redirectToRoute('sortie_dashboard');
+            return $this->redirectToRoute('sortie_details', ['id'=>$id]);
         }
+    }
+
+    #[Route('/desistement/{id}', name: '_desistementParticipant')]
+    public function desistement(
+        SortieRepository $sortieRepository,
+        ParticipantRepository $participantRepository,
+        EntityManagerInterface $em,
+        int $id,
+    ): Response{
+        $sortie = $sortieRepository->findOneBy(["id" => $id]);
+        $participant = $participantRepository->findOneBy(["email"=>$this->getUser()->getUserIdentifier()]);
+        if($sortie->getParticipantsInscrits()->contains($participant)){
+            $sortie->removeParticipantsInscrit($participant);
+            $em->flush();
+            //message de type ok
+            $type = "success";
+            $message = "Vous avez bien été désinscrit de la sortie !";
+            $this->addFlash($type, $message);
+            return $this->redirectToRoute('sortie_details', ['id'=>$id]);
+        }else{
+            //message de type non T DEJA INSCRI
+            $type = "danger";
+            $message = "Vous ne pouvez pas vous désinscrire sans avoir été inscrit !";
+            $this->addFlash($type, $message);
+            return $this->redirectToRoute('sortie_details', ['id'=>$id]);
+        }
+
     }
 
 }

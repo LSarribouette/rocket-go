@@ -1,28 +1,48 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    {% set placesDispo = ((sortie.nbInscriptionsMax) - (sortie.participantsInscrits | length))  %}
+{# check des condition #}
+{# current user est inscrit ? #}
+    {% if app.user in sortie.participantsInscrits %}
+    {% set alreadySub = true %}
+    {% else %}
+    {% set alreadySub = false %}
+    {% endif %}
+{# il reste des places pour s'inscrire ? #}
+    {% if placesDispo > 0 %}
+    {% set emptySeats = true %}
+    {% else %}
+    {% set emptySeats = false %}
+    {% endif %}
+
     <section class="hero">
         <div class="hero-body">
             <p class="title">
                 Infos de la Sortie {{ sortie.nom|capitalize }}
             </p>
             <a class="button box has-text-centered" href="{{ path('sortie_create') }}">Proposer une Sortie ! </a>
-            {% set placesDispo = ((sortie.nbInscriptionsMax) - (sortie.participantsInscrits | length))  %}
-            {%  if placesDispo <= 0 %}
-            <div class="notification is-danger is-light">
+        {% if emptySeats and not alreadySub %}
+            <div class="notification is-primary is-light">
                 <p class="subtitle">
-                Malheureusement <strong>vous ne pouvez pas</strong> vous Inscrire, il n'y a plus de place :(
+                     Il reste <strong class="has-text-primary"> {{ placesDispo }} </strong> places !
+                    <strong class="has-text-primary">Vous pouvez</strong> vous inscrire
                 </p>
             </div>
-            {%  else %}
-                <div class="notification is-primary is-light">
-                    <button class="delete"></button>
-                    <p class="subtitle">
-                        <strong class="has-text-primary">Vous pouvez</strong> vous inscrire, il reste
-                        <strong class="has-text-primary"> {{ placesDispo }} </strong> places !
-                    </p>
-                </div>
-            {% endif %}
+        {% elseif not emptySeats %}
+            <div class="notification is-danger is-light">
+                <p class="subtitle">
+                    Il n'y a malheureusement plus de place :(
+                </p>
+            </div>
+        {% endif %}
+        {% if alreadySub %}
+            <div class="notification is-warning is-light">
+                <p class="subtitle">
+                    <strong class="has-text-primary">Vous êtes déjà inscrit</strong>
+                </p>
+            </div>
+        {% endif %}
         </div>
     </section>
 
@@ -68,13 +88,18 @@
                     <time class="has-text-danger">{{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</time>
                 </p>
             </div>
-            {%  if placesDispo <= 0 %}
-                <a  class="button is-danger" title="Disabled button" disabled>Il n'y a plus de place</a>
-            {% else %}
-                <a class="button" href="{{ path('sortie_inscrireParticipant', {'id': sortie.id}) }}">S'inscrire !</a>
-            {% endif %}
+        {#  si le current user est déjà inscrit à l'activité, il peut se désinscrire #}
+        {% if app.user in sortie.participantsInscrits %}
+            <a class="button" href="{{ path('sortie_desistementParticipant', {'id': sortie.id}) }}">Se Désister</a>
+        {#  sinon, s'il y a de la place restante, il peut s'inscrire #}
+        {% elseif (not(app.user in sortie.participantsInscrits) and placesDispo > 0) %}
+            <a class="button" href="{{ path('sortie_inscrireParticipant', {'id': sortie.id}) }}">S'inscrire !</a>
+        {# sinon, déso c'est non #}
+        {% else %}
+            <a  class="button is-danger" title="Disabled button" disabled>Il n'y a plus de place</a>
+        {% endif %}
+            <a class="button" href="{{ path('sortie_dashboard') }}">Retourner sur le Dashboard</a>
         </div>
-    </div>
 
 {% endblock %}
 
