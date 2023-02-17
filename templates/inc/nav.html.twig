@@ -10,7 +10,7 @@
         <a href="{{ path('app_login') }}">Me connecter</a>
     {% endif %}
     {% if is_granted("ROLE_ADMIN") %}
-        <a href="{{ path('app_register') }}">[admin] Inscrire un participant</a>
+        <a href="{{ path('home_administration') }}">[Administrer]</a>
     {% endif %}
 </nav>
 #}
