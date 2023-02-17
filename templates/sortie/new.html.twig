@@ -47,7 +47,7 @@
             </p>
         </div>
         #}
-        <div id="lieu" class="field">
+        <div id="lieu" class="field box">
             <p class="control has-icons-left">
                 <label class="label">
                     {{ form_label(sortieForm.lieu) }}
@@ -56,9 +56,7 @@
                     <span class="icon is-small is-left">
                         <i class="fas fa-location-dot"></i>
                     </span>
-                    <option>
-                        {{ form_widget(sortieForm.lieu, {'attr': {'class':'has-background-success-light'} }) }}
-                    </option>
+                    {{ form_widget(sortieForm.lieu, {'attr': {'class':'has-background-success-light'} }) }}
                 </span>
             </p>
         </div>
@@ -110,13 +108,11 @@
             </div>
 
             <div class="control">
-                <input type="reset" value="Annuler" class="button is-link is-light"></input>
+                <input type="reset" value="Annuler" class="button is-link is-light">
             </div>
         </div>
         {{ form_end(sortieForm) }}
     </div>
-
-    {{ dump(sortieForm.duree) }}
 
 {% endblock %}
 

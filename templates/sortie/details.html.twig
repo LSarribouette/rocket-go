@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% set placesDispo = ((sortie.nbInscriptionsMax) - (sortie.participantsInscrits | length))  %}
+{# check des condition #}
+{# current user est inscrit ? #}
+    {% if app.user in sortie.participantsInscrits %}
+    {% set alreadySub = true %}
+    {% else %}
+    {% set alreadySub = false %}
+    {% endif %}
+{# il reste des places pour s'inscrire ? #}
+    {% if placesDispo > 0 %}
+    {% set emptySeats = true %}
+    {% else %}
+    {% set emptySeats = false %}
+    {% endif %}
+
+    <section class="hero">
+        <div class="hero-body">
+            <p class="title">
+                Infos de la Sortie {{ sortie.nom|capitalize }}
+            </p>
+            <a class="button box has-text-centered" href="{{ path('sortie_create') }}">Proposer une Sortie ! </a>
+        {% if emptySeats and not alreadySub %}
+            <div class="notification is-primary is-light">
+                <p class="subtitle">
+                     Il reste <strong class="has-text-primary"> {{ placesDispo }} </strong> places !
+                    <strong class="has-text-primary">Vous pouvez</strong> vous inscrire
+                </p>
+            </div>
+        {% elseif not emptySeats %}
+            <div class="notification is-danger is-light">
+                <p class="subtitle">
+                    Il n'y a malheureusement plus de place :(
+                </p>
+            </div>
+        {% endif %}
+        {% if alreadySub %}
+            <div class="notification is-warning is-light">
+                <p class="subtitle">
+                    <strong class="has-text-primary">Vous êtes déjà inscrit</strong>
+                </p>
+            </div>
+        {% endif %}
+        </div>
+    </section>
+
+    <div class="card container is-flex is-justify-space-between">
+        <div class="card-image column is-3">
+            <figure class="image is-4by3">
+                {% if sortie.urlPhoto and sortie.urlPhoto != "null" %}
+                    <img src="{{ sortie.urlPhoto}}" alt="photo présentant la sortie">
+                {% else %}
+                    <img src="https://picsum.photos/400/300" alt="Placeholder image">
+                {% endif %}
+            </figure>
+        </div>
+        <div class="card-content">
+            <div class="media">
+                <div class="media-left">
+                    <figure class="image is-48x48">
+                        <img src="https://loremflickr.com/96/96" alt="Placeholder image">
+                    </figure>
+                </div>
+                <div class="media-content">
+                    <p class="title is-4 has-text-link">
+                        {{ sortie.nom|capitalize }}
+                    </p>
+                    <p class="has-text-primary">
+                        organisé par : {{ organisateur.pseudo }}
+                        <a href="mailto:{{ organisateur.email }}">@{{ organisateur.email }}</a>
+                    </p>
+                    <p class="subtitle is-6 has-text-danger">
+                        nombre de place restantes : {{ placesDispo }} / {{ sortie.nbInscriptionsMax }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="content">
+                {{ sortie.descriptionInfos }}
+                <br>
+                <p class="has-background-{{ random(['danger', 'warning', 'success', 'primary']) }}-light">
+                    DU
+                    <time class="has-text-primary">{{ sortie.dateDebut | format_datetime('full', 'short',locale='fr') }}</time>
+                    <br>
+                    AU
+                    <time class="has-text-danger">{{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</time>
+                </p>
+            </div>
+        {#  si le current user est déjà inscrit à l'activité, il peut se désinscrire #}
+        {% if app.user in sortie.participantsInscrits %}
+            <a class="button" href="{{ path('sortie_desistementParticipant', {'id': sortie.id}) }}">Se Désister</a>
+        {#  sinon, s'il y a de la place restante, il peut s'inscrire #}
+        {% elseif (not(app.user in sortie.participantsInscrits) and placesDispo > 0) %}
+            <a class="button" href="{{ path('sortie_inscrireParticipant', {'id': sortie.id}) }}">S'inscrire !</a>
+        {# sinon, déso c'est non #}
+        {% else %}
+            <a  class="button is-danger" title="Disabled button" disabled>Il n'y a plus de place</a>
+        {% endif %}
+            <a class="button" href="{{ path('sortie_dashboard') }}">Retourner sur le Dashboard</a>
+        </div>
+
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+
