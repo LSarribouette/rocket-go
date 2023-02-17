@@ -95,4 +95,29 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+//TODO : faire des tests de vitesses de rendu de page, pas besoin de ça en effet, mais on garde peut etre pour les performances des rq sur DB?
+    public function findOneOrganisateurById($sortieOrganisateurID)
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.id = :val')
+            ->setParameter('val', $sortieOrganisateurID)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
+//    /**
+//     * @return Participant[] Returns an array of Participant objects
+//     */
+//    public function findByExampleField($value): array
+//    {
+//        return $this->createQueryBuilder('p')
+//            ->andWhere('p.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->orderBy('p.id', 'ASC')
+//            ->setMaxResults(10)
+//            ->getQuery()
+//            ->getResult()
+//        ;
+//    }

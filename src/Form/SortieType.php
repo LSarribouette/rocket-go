@@ -40,6 +40,7 @@ class SortieType extends AbstractType
                     'widget' => 'single_text'
                 ])
             ->add('duree',IntegerType::class)
+//             ->add('duree',
             /* TODO : handle la duree avec un intervaltype ce serait trop stylé
             DateIntervalType::class,
             [
@@ -58,8 +59,7 @@ class SortieType extends AbstractType
                     'minutes' => 'Minutes',
                 ]
             ])
-             */
-
+ */
             ->add('dateCloture',
                 type: DateTimeType::class,
                 options: [

@@ -1,0 +1,36 @@
+html {
+    height: 100%;
+}
+body{
+    min-height: 100%;
+    font-family: Luciole-Regular, Tahoma, Verdana, sans-serif;
+}
+@font-face {
+    src: url("fonts/Luciole-Regular.ttf");
+    font-family: "Luciole-Regular";
+}
+
+/*
+body {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 15%;
+}
+*/
+main {
+    min-height: 100vh;
+    height: 100%;
+}
+
+header {
+    justify-content: space-evenly;
+}
+
+nav {
+    text-align: center;
+}
+
+.alert-success {
+    background-color: mistyrose;
+    text-align: center;
+}

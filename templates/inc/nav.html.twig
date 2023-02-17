@@ -1,5 +1,6 @@
+{# TODO : virer ce code, mais pour linstant matrice lisible pratique #}
+{#
 <nav>
-    <a href="{{ path('home_index') }}">Accueil</a>
     {% if app.user %}
         <a href="{{ path('sortie_dashboard') }}">Sortir</a>
         <a href="{{ path('home_profile') }}">Mon profil</a>
@@ -12,3 +13,77 @@
         <a href="{{ path('home_administration') }}">[Administrer]</a>
     {% endif %}
 </nav>
+#}
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img src="{{ asset('assets/media/favicon-team-rocket-02.jpg') }}" alt="logo">
+        </a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="menu-links">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+        <div id="menu-links" class="navbar-menu" >
+            <div class="navbar-start">
+
+                {% if app.user %}
+                    <a class="navbar-item" href="{{ path('sortie_dashboard') }}">Sortir</a>
+                    <a class="navbar-item" href="{{ path('home_profile') }}">Mon profil</a>
+                {% endif %}
+                {% if not app.user %}
+                    <a  class="navbar-item" href="{{ path('app_login') }}">Sorties</a>
+                {% endif %}
+
+                <div class="buttons">
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <a class="button has-text-primary" href="{{ path('app_register') }}">[admin] Inscrire un participant</a>
+                    {% endif %}
+                    {% if app.user %}
+                        <a class="button is-warning" href="{{ path('app_logout') }}">Me déconnecter</a>
+                    {% endif %}
+                    {% if not app.user %}
+                        <a  class="button is-primary" href="{{ path('app_login') }}">Me connecter</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-primary">
+                            <strong>Sign up</strong>
+                        </a>
+                        <a class="button is-light">
+                            Log in
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+</nav>
+
+<script>
+    console.log("loaded")
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Get all "navbar-burger" elements
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+        // Add a click event on each of them
+        $navbarBurgers.forEach( el => {
+            el.addEventListener('click', () => {
+
+                // Get the target from the "data-target" attribute
+                const target = el.dataset.target;
+                const $target = document.getElementById(target);
+
+                // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                el.classList.toggle('is-active');
+                $target.classList.toggle('is-active');
+            });
+        });
+
+    });
+</script>
