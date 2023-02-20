@@ -2,7 +2,7 @@
 
 {% block body %}
     {% set placesDispo = ((sortie.nbInscriptionsMax) - (sortie.participantsInscrits | length))  %}
-{# check des condition #}
+{# check des conditions, variables bien pratiques #}
 {# current user est inscrit ? #}
     {% if app.user in sortie.participantsInscrits %}
     {% set alreadySub = true %}
@@ -14,6 +14,12 @@
     {% set emptySeats = true %}
     {% else %}
     {% set emptySeats = false %}
+    {% endif %}
+{# current user est l'organisateur.ice #}
+    {% if app.user == sortie.organisateur %}
+       {% set organisateurIsMe = true %}
+    {% elseif app.user != sortie.organisateur %}
+       {% set organisateurIsMe = false %}
     {% endif %}
 
     <section class="hero">
@@ -99,6 +105,13 @@
             <a  class="button is-danger" title="Disabled button" disabled>Il n'y a plus de place</a>
         {% endif %}
             <a class="button" href="{{ path('sortie_dashboard') }}">Retourner sur le Dashboard</a>
+        {% if organisateurIsMe %}
+            <a onclick="return confirm('Êtes vous sur.e de vouloir annuler la sortie ?')"
+               href="{{ path('sortie_annuler', {'id': sortie.id}) }}"
+               class="button is-warning">
+                Annuler la sortie
+            </a>
+        {% endif %}
         </div>
 
 {% endblock %}
