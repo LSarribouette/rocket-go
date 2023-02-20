@@ -14,7 +14,7 @@
 <main class="container">
     {% for label, messages in app.flashes %}
         {% for message in messages %}
-            <div class="alert-{{ label }}">
+            <div class="alert has-background-{{ label }}-light box has-text-centered">
                 {{ message }}
             </div>
         {% endfor %}
