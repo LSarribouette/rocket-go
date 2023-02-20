@@ -217,15 +217,15 @@ class SortieController extends AbstractController
     }
     #[Route('/mes-sorties', name: '_messorties')]
     public function dashboardMesSorties(
-        SortieRepository $sortieRepository,
+        SortieRepository $sortieRepository
     ): Response
     {
-        $sorties = $sortieRepository->findAll();
-        $nowAsDateTimeObject = new \DateTime('now', new DateTimeZone('Europe/Paris'));
+        $sorties_organisateurice = $sortieRepository->findBy(["organisateur" => $this->getUser()]);
+        $sorties_inscrite = $sortieRepository->findWhereRegistered($this->getUser()->getId());
 
         return $this->render(
             'sortie/mes-sorties.html.twig',
-            compact("sorties", "nowAsDateTimeObject")
+            compact("sorties_organisateurice", "sorties_inscrite")
         );
     }
 

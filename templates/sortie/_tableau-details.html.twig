@@ -1,0 +1,42 @@
+<details class="box">
+    <summary>
+        <span class="title is-5 has-text-link">{{ sortie.nom|capitalize }}</span>
+    </summary>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Organisateurice</th>
+            <th>Description</th>
+            <th>Etat</th>
+            <th>Site</th>
+            <th>Lieu</th>
+            <th>Nombre de participants</th>
+            <th>Date de début</th>
+            <th>Date de clôture</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ sortie.nom }}</td>
+            {% if app.user is not same as(sortie.organisateur) %}
+            <td>{{ sortie.organisateur.pseudo }}</td>
+            {% else %}
+            <td>VOUS-MEME</td>
+            {% endif %}
+            <td>{{ sortie.descriptionInfos }}</td>
+            <td>{{ sortie.etat.libelle }}</td>
+            <td>{{ sortie.organisateur.site.nom }}</td>
+            <td>{{ sortie.lieu.nom }}</td>
+            <td>{{ sortie.participantsInscrits | length }}/{{ sortie.nbInscriptionsMax }}</td>
+            <td>{{ sortie.dateDebut | format_datetime('full', 'short',locale='fr') }}</td>
+            <td>{{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</td>
+            <td>
+                <a class="button is-light is-small is-primary"
+                   href="{{ path('sortie_details', {'id': sortie.id}) }}">Détails</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</details>
