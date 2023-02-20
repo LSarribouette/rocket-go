@@ -139,11 +139,12 @@ class SortieController extends AbstractController
         int $id
     ): Response
     {
+        $nowAsDateTimeObject = new \DateTime('now', new DateTimeZone('Europe/Paris'));
         $sortie = $sortieRepository->findOneBy(["id" => $id]);
         $organisateur = $participantRepository->findOneOrganisateurById($sortie->getOrganisateur());
         return $this->render(
             'sortie/details.html.twig',
-            compact("sortie", "organisateur")
+            compact("sortie", "organisateur", "nowAsDateTimeObject")
         );
     }
     #[Route('/sinscrire/{id}', name: '_inscrireParticipant')]
@@ -156,6 +157,17 @@ class SortieController extends AbstractController
     {
         $sortie = $sortieRepository->findOneBy(["id" => $id]);
         $participant = $participantRepository->findOneBy(["email"=>$this->getUser()->getUserIdentifier()]);
+        $nowAsDateTimeObject = new \DateTime('now', new DateTimeZone('Europe/Paris'));
+        $dateClotureInscription = $sortie->getDateCloture();
+        //check si la date d'inscription n'est pas dépassé.
+        if($dateClotureInscription < $nowAsDateTimeObject){
+            //message de type non la date d'inscription est dépassé
+            $type = "danger";
+            $message = "Vous ne pouvez pas vous inscrire, les inscriptions sont fermées";
+            $this->addFlash($type, $message);
+            return $this->redirectToRoute('sortie_details', ['id'=>$id]);
+        }
+
         //check si il reste de la place pour s"inscrire
         if(
             ($sortie->getParticipantsInscrits()->count()) < ($sortie->getNbInscriptionsMax())
@@ -181,7 +193,7 @@ class SortieController extends AbstractController
                 return $this->redirectToRoute('sortie_details', ['id'=>$id]);
             }
         } else {
-            //message de type non APLUDPLACE
+            //message de type non APUDPLACE
             $type = "danger";
             $message = "Il n'y a plus de place, l'inscription a échouée";
             $this->addFlash($type, $message);

@@ -18,138 +18,121 @@
     </section>
 
     <div id="view" class="is-flex-widescreen box ">
-{#
-<div id="table-view">
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Sortie</th>
-            <th>NOM</th>
-            <th>ETAT</th>
-            <th>Organisateur.ice</th>
-            <th>---</th>
-        </tr>
-        </thead>
-    {% for index, sortie in sorties %}
 
-        <tbody>
-        <tr>
-            <th>{{ index }}</th>
-            <td>{{ sortie.nom }}</td>
-            <td>{{ sortie.etat.libelle }}</td>
-            <td>{{ sortie.organisateur.pseudo }} <br> {{ sortie.organisateur.email }} </td>
-            <td>---</td>
-        </tr>
-        </tbody>
-    {% endfor %}
-    </table>
-</div>
-#}
-<div id="cards view" class="container">
-   {% for index, sortie in sorties %}
-       {# settings de variables bien pratiques #}
-       {% set placeDispos = sortie.nbInscriptionsMax - (sortie.participantsInscrits | length) %}
-       {% if app.user in sortie.participantsInscrits %}
-           {% set alreadySub = true %}
-       {% else %}
-           {% set alreadySub = false %}
-       {% endif %}
-       {% if app.user == sortie.organisateur %}
-           {% set organisateurIsMe = true %}
-       {% elseif app.user != sortie.organisateur %}
-           {% set organisateurIsMe = false %}
-       {% endif %}
+        <div id="cards view" class="container">
+            {% for index, sortie in sorties %}
+                {# settings de variables bien pratiques #}
+                {% set placeDispos = sortie.nbInscriptionsMax - (sortie.participantsInscrits | length) %}
+                {% if app.user in sortie.participantsInscrits %}
+                    {% set alreadySub = true %}
+                {% else %}
+                    {% set alreadySub = false %}
+                {% endif %}
+                {% if app.user == sortie.organisateur %}
+                    {% set organisateurIsMe = true %}
+                {% elseif app.user != sortie.organisateur %}
+                    {% set organisateurIsMe = false %}
+                {% endif %}
+                {% if nowAsDateTimeObject < sortie.dateCloture %}
+                    {%  set dateClotureOK = true %}
+                {% else  %}
+                    {%  set dateClotureOK = false %}
+                {% endif %}
 
-       {# loop avec conditions pour mettre MAX 3cards de sorties dans une section #}
-       {% if loop.first %}
-        <section class="columns">
-       {% endif %}
-       {% if placeDispos <= 0 %}
-       <div id="sortie-{{ index }}" class="column m-4 has-background-danger-light">
-       {% else %}
-       <div id="sortie-{{ index }}" class="column box m-4">
-       {% endif %}
-            <div class="card-image p-4">
-                <figure class="image is-4by3">
-                    {% if sortie.urlPhoto and sortie.urlPhoto != "null" %}
-                    <img src="{{ sortie.urlPhoto}}" alt="photo présentant la sortie">
-                    {% else %}
-                    <img src="https://picsum.photos/400/300" alt="Placeholder image">
-                    {% endif %}
-                </figure>
-            </div>
-            <div class="card-content">
-                 <div class="media">
-                    <div class="media-content">
-                        <p class="title is-4 has-text-link">
-                            {{ sortie.nom|capitalize }}
-                        </p>
-                        <p class="subtitle is-6 has-text-info-dark">
-                            {% if organisateurIsMe %}
-                                <strong> Vous </strong> avez planifié cette sortie
+                {# loop avec conditions pour mettre MAX 3cards de sorties dans une section #}
+                {% if loop.first %}
+                    <section class="columns">
+                {% endif %}
+                {% if (placeDispos <= 0) or not(dateClotureOK) %}
+                <div id="sortie-{{ index }}" class="column m-4 has-background-danger-light">
+                {% else %}
+                <div id="sortie-{{ index }}" class="column box m-4">
+                {% endif %}
+                <div class="card-image p-4">
+                    <figure class="image is-4by3">
+                        {% if sortie.urlPhoto and sortie.urlPhoto != "null" %}
+                            <img src="{{ sortie.urlPhoto}}" alt="photo présentant la sortie">
+                        {% else %}
+                            <img src="https://picsum.photos/400/300" alt="Placeholder image">
+                        {% endif %}
+                    </figure>
+                </div>
+                <div class="card-content">
+                    <div class="media">
+                        <div class="media-content">
+                            <p class="title is-4 has-text-link">
+                                {{ sortie.nom|capitalize }}
+                            </p>
+                            <p class="subtitle is-6 has-text-info-dark">
+                                {% if organisateurIsMe %}
+                                    <strong> Vous </strong> avez planifié cette sortie
+                                {% else %}
+                                    organisé par:
+                                    <strong>{{ sortie.organisateur.pseudo }}</strong>
+                                {% endif %}
+
+                            </p>
+                            {% if placeDispos > 0 %}
+                                <p class="subtitle is-6 has-text-primary-dark">
+                                    nombre de place réservées: {{ sortie.participantsInscrits | length }} <strong>/</strong> {{ sortie.nbInscriptionsMax }}
+                                </p>
                             {% else %}
-                                organisé par:
-                                <strong>{{ sortie.organisateur.pseudo }}</strong>
+                                <p class="subtitle is-6 has-text-danger">
+                                    Il n'y a malheureusement plus de place pour cette Sortie :(
+                                </p>
                             {% endif %}
-
+                        </div>
+                    </div>
+                    <div class="content">
+                        {% if alreadySub %}
+                            <p class="has-background-warning-light">
+                                Vous êtes déjà inscrit.e à cette sortie
+                            </p>
+                        {% endif %}
+                        <br>
+                        <p class="has-background-info-light">
+                            DU
+                            <time class="has-text-primary">{{ sortie.dateDebut | format_datetime('full', 'short',locale='fr') }}</time>
+                            <br>
+                            AU
+                            <time class="has-text-primary">
+                                {{ sortie.dateDebut | date_modify('+'~sortie.duree~' min') | format_datetime('full', 'short',locale='fr') }}
+                            </time>
+                            <br>
+                            Durée : {{ sortie.duree }} minutes
                         </p>
-                        {% if placeDispos > 0 %}
-                        <p class="subtitle is-6 has-text-primary-dark">
-                            nombre de place réservées: {{ sortie.participantsInscrits | length }} <strong>/</strong> {{ sortie.nbInscriptionsMax }}
-                        </p>
+                        <p class="has-background-warning-light box">
+                            {% if not dateClotureOK %}
+                            <span class="has-text-danger"> Les inscriptions à cette activité sont closes.</span>
                             {% else %}
-                        <p class="subtitle is-6 has-text-danger">
-                            Il n'y a malheureusement plus de place pour cette Sortie :(
+                            Fin des incriptions le :
+                            <time class="has-text-danger">{{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</time>
                         </p>
                         {% endif %}
+                        <div class="is-flex is-flex-direction-column">
+                            <a href="{{ path('sortie_details', {'id': sortie.id}) }}" class="button">En Savoir +</a>
+                            {% if organisateurIsMe %}
+                                <a onclick="return confirm('Êtes vous sur.e de vouloir annuler la sortie ?')"
+                                   href="{{ path('sortie_annuler', {'id': sortie.id}) }}"
+                                   class="button is-warning">
+                                    Annuler la sortie
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-                <div class="content">
-                    {% if alreadySub %}
-                    <p class="has-background-warning-light">
-                        Vous êtes déjà inscrit.e à cette sortie
-                    </p>
-                    {% endif %}
-                    <br>
-                    <p class="has-background-info-light">
-                    DU
-                    <time class="has-text-primary">{{ sortie.dateDebut | format_datetime('full', 'short',locale='fr') }}</time>
-                        <br>
-                        AU
-                        <time class="has-text-primary">
-                            {{ sortie.dateDebut | date_modify('+'~sortie.duree~' min') | format_datetime('full', 'short',locale='fr') }}
-                        </time>
-                        <br>
-                        Durée : {{ sortie.duree }} minutes
-                    </p>
-                    <p class="has-background-warning-light box">
-                    Fin des incriptions le :
-                    <time class="has-text-danger">{{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</time>
-                    </p>
-                    <div class="is-flex is-flex-direction-column">
-                        <a href="{{ path('sortie_details', {'id': sortie.id}) }}" class="button">En Savoir +</a>
-                        {% if organisateurIsMe %}
-                            <a onclick="return confirm('Êtes vous sur.e de vouloir annuler la sortie ?')"
-                               href="{{ path('sortie_annuler', {'id': sortie.id}) }}"
-                               class="button is-warning">
-                                Annuler la sortie
-                            </a>
-                        {% endif %}
-                    </div>
+                {% if placeDispos <= 0 %}
                 </div>
-            </div>
-       {% if placeDispos <= 0 %}
+                {% else %}
+                </div>
+                {% endif %}
+                {% if loop.index % 3 == 0 %}
+                    </section><section class="columns">
+                {% endif %}
+                {% if loop.last %}
+                    </section>
+                {% endif %}
+            {% endfor %}
         </div>
-       {% else %}
-       </div>
-       {% endif %}
-        {% if loop.index % 3 == 0 %}
-        </section><section class="columns">
-        {% endif %}
-        {% if loop.last %}
-        </section>
-        {% endif %}
-        {% endfor %}
-</div>
-</div>
+    </div>
 {% endblock %}
