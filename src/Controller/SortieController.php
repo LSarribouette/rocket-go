@@ -228,4 +228,31 @@ class SortieController extends AbstractController
             compact("sorties", "nowAsDateTimeObject")
         );
     }
+
+    #[Route('/annuler/{id}', name: '_annuler')]
+    public function annuler(
+        SortieRepository $sortieRepository,
+        EntityManagerInterface $em,
+        ParticipantRepository $participantRepository,
+        int $id
+    ): Response
+    {
+        $sortie = $sortieRepository->findOneBy(["id" => $id]);
+        //je récupère tous les participants à cette sortie
+        $participants = $sortie->getParticipantsInscrits();
+        //je supprime les participants, pour vider la table d'association sortie_participant
+        foreach ($participants as $participant) {
+            $sortie->removeParticipantsInscrit($participant);
+            $em->flush();
+        }
+        $sortieRepository->remove($sortie);
+        $em->flush();
+
+        $type = "success";
+        $message = "Vous avez supprimé le sortie";
+        $this->addFlash($type, $message);
+        return $this->redirectToRoute('sortie_dashboard');
+
+    }
+
 }
