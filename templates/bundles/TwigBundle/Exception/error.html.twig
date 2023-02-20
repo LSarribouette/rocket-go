@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="has-text-centered">
+        <h1 class="title">Une erreur s'est produite !</h1>
+        Erreur <em>"{{ status_code }} - {{ status_text }}</em>".<br>
+        Retour sur la <a href="{{ path('home_index') }}">page d'accueil</a>.
+        {# photo : https://pokegraph.com/55-pokemon-de-la-semaine-n-38-et-vos-dessins-de-wailord#}
+        <img src="{{ asset('assets/media/error-whale.png') }}" alt="Une baleine pokémon échouée">
+    </div>
+{% endblock %}
