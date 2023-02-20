@@ -21,6 +21,13 @@
         {% if is_granted("ROLE_ADMIN") %}
             Informations complémentaires : rôle d'administrateur.e
         {% endif %}
+        <div id="avatar">
+            {% if app.user.urlPhoto %}
+            <img width="150px" type=file src="{{ app.user.urlPhoto }}" alt="votre avatar">
+            {% else %}
+            <img width="150px" src="{{ asset('assets/media/user_files/avatarTestCatJPG.jpg') }}" alt="default avatar image">
+            {% endif %}
+        </div>
     </div><br>
     <a href="{{ path('home_modify') }}" class="button">Modifier mon profil</a>
     <a href="{{ path('home_password') }}" class="button">Modifier mon mot de passe</a>

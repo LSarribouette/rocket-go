@@ -6,9 +6,12 @@ use App\Entity\Participant;
 use App\Entity\Site;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
+
 
 class ProfileType extends AbstractType
 {
@@ -25,6 +28,27 @@ class ProfileType extends AbstractType
                 'label' => 'Site'
             ])
             ->add('telephone')
+
+            ->add('urlPhoto', FileType::class,
+                [
+                    'mapped'=>false,
+                    'label'=>'Ajouter une image ?',
+                    'required' => false,
+                    'constraints' => [
+                        new File([
+                            'maxSize' => '1024k',
+                            'mimeTypes' => [
+                                'image/png',
+                                'image/jpeg',
+                                'image/webp',
+                                'image/gif',
+                            ],
+                            'mimeTypesMessage' => 'Please upload a valid File',
+                        ])
+                    ]
+                ])
+
+
             ->add('submit',
                 type: SubmitType::class,
                 options: [
