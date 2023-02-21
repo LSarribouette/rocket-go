@@ -71,4 +71,23 @@ class SortieRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function findAllDateDebutOlderThanAMonth()
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.dateDebut < :olderThan')
+            ->setParameter('olderThan', new \DateTime('-1 months'))
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+    public function findAllOlderThanCloture()
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.dateCloture < :olderThan')
+            ->setParameter('olderThan', new \DateTime)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 }

@@ -4,4 +4,5 @@ VALUES ('créée'),
        ('clôturée'),
        ('en cours'),
        ('passée'),
-       ('annulée')
+       ('annulée'),
+       ('archivée')
