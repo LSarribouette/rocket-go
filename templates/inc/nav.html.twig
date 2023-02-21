@@ -17,7 +17,7 @@
                     <a class="navbar-item" href="{{ path('sortie_messorties') }}">Mes sorties</a>
                     <a class="navbar-item" href="{{ path('home_profile') }}">Mon profil</a>
                     {% if is_granted("ROLE_ADMIN") %}
-                        <a class="navbar-item" href="{{ path('app_register') }}">[Administrer]</a>
+                        <a class="navbar-item" href="{{ path('home_administration') }}">[Administrer]</a>
                     {% endif %}
                 {% endif %}
                 {% if not app.user %}

@@ -1,10 +1,66 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-Liste de mes sorties : que j'ai créées, que je suis inscrit.e.s
+    <section class="" id="mes-sorties">
+        <h1 class="title">Mes sorties</h1>
+        <div class="mb-2">
+            <button class="button is-light is-info is-outlined" onclick="afficheListe('organisateurice')" id="organisateuriceBouton">Celles
+                que j'organise
+            </button>
+            <button class="button is-light" onclick="afficheListe('inscrite')" id="inscriteBouton">Celles auxquelles je
+                suis inscrit.e
+            </button>
+{#           TODO quand la cloture des inscriptions sera faite #}
+{#            <button class="button is-light" onclick="afficheListe('participees')" id="participeesBouton">Celles#}
+{#                auxquelles j'ai participées#}
+{#            </button>#}
+        </div>
+    </section>
+
+    <div id="organisateurice" class="m-2">
+        <div id="view" class="is-flex-widescreen box">
+            <div id="cards view" class="container">
+                <div class="title is-6">Liste des sorties dont je suis l'organisateurice</div>
+                {% for sortie in sorties_organisateurice %}
+                    {% include("sortie/_tableau-details.html.twig") %}
+                {% endfor %}
+            </div>
+{#            <div id="cards view" class="container">#}
+{#                {% for sortie in app.user.sortiesOrganisees %}#}
+{#                    {% include("sortie/_tableau-details.html.twig") %}#}
+{#                {% endfor %}#}
+{#            </div>#}
+        </div>
+    </div>
+
+    <div id="inscrite" hidden class="m-2">
+        <div id="view" class="is-flex-widescreen box">
+            <div id="cards view" class="container">
+                <div class="title is-6">Liste des sorties auxquelles je suis inscrit.e</div>
+                {% for sortie in sorties_inscrite %}
+                    {% include("sortie/_tableau-details.html.twig") %}
+                {% endfor %}
+            </div>
+{#            <div id="cards view" class="container">#}
+{#                {% for sortie in app.user.inscriptions %}#}
+{#                    {% include("sortie/_tableau-details.html.twig") %}#}
+{#                {% endfor %}#}
+{#            </div>#}
+        </div>
+    </div>
+
+{#    TODO quand la cloture des inscriptions sera faite #}
+{#    <div id="participees" hidden class="m-2">#}
+{#        <div id="view" class="is-flex-widescreen box ">#}
+{#            <div id="cards view" class="container">#}
+{#                {% for sortie in ???? %}#}
+{#                    {% include("sortie/_tableau-details.html.twig") %}#}
+{#                {% endfor %}#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+
+    <script src="{{ asset('assets/javascript/hide-unhide-div.js') }}"></script>
 {% endblock %}
 
-{% block title %}
-
-{% endblock %}
-
+{% block title %}{{ parent() }} - Mes sorties{% endblock %}

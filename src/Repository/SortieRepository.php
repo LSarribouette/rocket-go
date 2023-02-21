@@ -39,6 +39,14 @@ class SortieRepository extends ServiceEntityRepository
         }
     }
 
+    public function findWhereRegistered(int $participant_id) {
+        return $this->createQueryBuilder('sortie')
+                    ->leftJoin('sortie.participantsInscrits', 'participants_inscrits')
+                    ->andWhere('participants_inscrits.id LIKE :participant_id')
+                    ->setParameter('participant_id', $participant_id)
+                    ->getQuery()
+                    ->execute();
+    }
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects
 //     */
