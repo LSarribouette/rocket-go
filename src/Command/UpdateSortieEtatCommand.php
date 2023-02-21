@@ -164,6 +164,14 @@ class UpdateSortieEtatCommand extends Command
         }
     }
 
+    protected function robot(OutputInterface $output){
+        $output->writeln('--------- ROBOT MOD MADE FOR AUTOMATION ---------');
+        $this->cloture($output);
+        $this->passe($output);
+        $this->archive($output);
+        $output->writeln('--------- ROBOT MOD FINISHED ---------');
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln([
@@ -193,11 +201,13 @@ class UpdateSortieEtatCommand extends Command
             break;
             case 'M': $this->manual($output, $sortieID, $etatID);
             break;
+            case 'R': $this->robot($output, $sortieID, $etatID);
+            break;
             default: $this->unrecognized($input,$output);
             break;
         };
 
-        if($mode=='A' || $mode=='P' || $mode=='C' || $mode=='M'){
+        if($mode=='A' || $mode=='P' || $mode=='C' || $mode=='M'|| $mode=='R'){
             $io->success('Command Successfully Executed :) The Rocket-Go TEAM thanks you for using it');
             return Command::SUCCESS;
         } else {
