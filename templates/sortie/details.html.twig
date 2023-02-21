@@ -76,8 +76,12 @@
     <div class="card-content">
         <div class="media">
             <div class="media-left">
-                <figure class="image is-48x48">
-                    <img src="https://loremflickr.com/96/96" alt="Placeholder image">
+                <figure id="avatar" class="image is-48x48">
+                    {% if sortie.organisateur.urlPhoto %}
+                        <img width="150px" type=file src="{{ asset(sortie.organisateur.urlPhoto) }}" alt="avatar de l'organisateur">
+                    {% else %}
+                        <img width="150px" src="{{ asset('assets/media/user_files/defaultAvatar.png') }}" alt="default avatar image">
+                    {% endif %}
                 </figure>
             </div>
             <div class="media-content">
