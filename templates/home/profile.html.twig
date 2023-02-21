@@ -2,33 +2,45 @@
 
 {% block body %}
     <h1 class="title">Informations du profil</h1>
-    <div>
-        <ul>
-            <li>Prénom : {{ app.user.prenom }}</li>
-            <li>Nom : {{ app.user.nom }}</li>
-            <li>Pseudo : {{ app.user.pseudo }}</li>
-            <li>Adresse email : {{ app.user.email }}</li>
-            <li>Site de rattachement : {{ app.user.site.nom }}</li>
-            <li>Numéro de téléphone :
-                {% if app.user.telephone %}
-                    {{ app.user.telephone }}
+    <article class="media box has-background-info-light">
+        <figure class="media-left box has-background-primary-light">
+            <p class="image is-128x128">
+                {% if app.user.urlPhoto %}
+                    <img type=file src="{{ app.user.urlPhoto }}" alt="votre avatar">
                 {% else %}
-                    <em>non renseigné</em>
+                    <img type=file  src="{{ asset('assets/media/user_files/defaultAvatar.png') }}" alt="default avatar image">
                 {% endif %}
-            </li>
-        </ul>
-        <br>
-        {% if is_granted("ROLE_ADMIN") %}
-            Informations complémentaires : rôle d'administrateur.e
-        {% endif %}
-        <div id="avatar">
-            {% if app.user.urlPhoto %}
-            <img width="150px" type=file src="{{ app.user.urlPhoto }}" alt="votre avatar">
-            {% else %}
-            <img width="150px" src="{{ asset('assets/media/user_files/avatarTestCatJPG.jpg') }}" alt="default avatar image">
+            </p>
+            <small class="has-text-primary-dark">@{{ app.user.pseudo }}</small>
+        </figure>
+        <div class="media-content">
+            <div class="content">
+                <p>
+                    Prénom : <strong>{{ app.user.prenom }}</strong> <br>
+                    Nom : <strong>{{ app.user.nom }}</strong> <br>
+                    <span class="has-text-primary has-text-weight-bold">Pseudo</span> : <strong>{{ app.user.pseudo }}</strong> <br>
+                    --- <br>
+                    Adresse email : <strong>{{ app.user.email }}</strong> <br>
+                    Site de rattachement : <strong>{{ app.user.site.nom }}</strong> <br>
+                    Numéro de téléphone :  <strong>
+                    {% if app.user.telephone %}
+                        {{ app.user.telephone }}
+                    {% else %}
+                        <em>non renseigné</em>
+                    {% endif %} </strong> <br>
+                    {% if is_granted("ROLE_ADMIN") %}
+                        --- <br>
+                        <span class="has-text-primary">Informations complémentaires : rôle d'administrateur.e</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="media-right">
+            {% if is_granted("ROLE_ADMIN") %}
+                <span class="has-text-danger-light has-background-danger-dark">Admin</span>
             {% endif %}
         </div>
-    </div><br>
+    </article>
     <a href="{{ path('home_modify') }}" class="button">Modifier mon profil</a>
     <a href="{{ path('home_password') }}" class="button">Modifier mon mot de passe</a>
 {% endblock %}
