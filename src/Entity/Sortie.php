@@ -5,8 +5,11 @@ namespace App\Entity;
 use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\IntegerType;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
@@ -16,18 +19,31 @@ class Sortie
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank(message: 'Ne peut pas être vide.')]
+    #[Assert\Length(min: 2, max: 30, minMessage: 'Trop court, minimum 2 caractères.', maxMessage: 'Trop Long, maximum 30 caracteres.')]
     #[ORM\Column(length: 30)]
     private ?string $nom = null;
 
+
+    #[Assert\Type("\DateTimeInterface")]
+    #[Assert\GreaterThan('today', message: 'Le Début de l\'activité doit être supérieur à maintenant.')]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateDebut = null;
 
+    #[Assert\Type("Integer", message: 'La durée doit être exprimée en nombre entier.')]
+    #[Assert\GreaterThan(0, message: "La durée doit être strictement supérieure à 0 Minutes")]
+    #[Assert\LessThanOrEqual(43800, message: 'La sortie ne peut pas durer plus d\'1 mois. C\'est pas mal déjà 1 mois, non ?')]
     #[ORM\Column(nullable: true)]
     private ?int $duree = null;
 
+    #[Assert\GreaterThan('today', message: 'La date de cLoture d`\'inscription doit être supérieur à maintenant.')]
+    #[Assert\LessThanOrEqual(propertyPath: "dateDebut", message: "La date de cloture d'inscription doit être antérieure à la date ou débute la sortie.")]
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $dateCloture = null;
 
+    #[Assert\Type("Integer", message: 'Le nombre de participant.e doit être exprimé en nombre entier.')]
+    #[Assert\GreaterThan(1, message: "Le nombre de participant.e doit être strictement supérieur à 1.")]
+    #[Assert\LessThanOrEqual(100, message: "Le nombre de participant.e doit être inférieur à 101, c'est beaucoup déjà 100 non ?")]
     #[ORM\Column]
     private ?int $nbInscriptionsMax = null;
 
