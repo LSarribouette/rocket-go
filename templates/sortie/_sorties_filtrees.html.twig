@@ -1,0 +1,62 @@
+<div class="is-align-self-stretch card box">
+    <div class="card-image p-4">
+        <figure class="image is-4by3">
+            {% if sortie.urlPhoto and sortie.urlPhoto != "null" %}
+                <img src="{{ sortie.urlPhoto }}" alt="Photo présentant la sortie">
+            {% else %}
+                <img src="https://picsum.photos/400/300" alt="Photo par défaut présentant une sortie">
+            {% endif %}
+        </figure>
+    </div>
+    <div class="card-content">
+        <div class="media">
+            <div class="media-content ">
+                <p class="title is-4 has-text-link">{{ sortie.nom | capitalize }}</p>
+                <p class="subtitle is-6 has-text-info-dark">
+                    {{ app.user == sortie.organisateur ? "<strong> Vous </strong> avez planifié cette sortie" :
+                    "Organisateur.e : " ~ sortie.organisateur.pseudo }}
+                </p>
+                <p class="subtitle is-6">{{ sortie.organisateur.site.nom }}</p>
+                <p class="subtitle is-6 has-text-primary-dark">
+                    nombre de place réservées: {{ sortie.participantsInscrits | length }}
+                    <strong>/</strong> {{ sortie.nbInscriptionsMax }}
+                </p>
+                {{ sortie.nbInscriptionsMax - (sortie.participantsInscrits | length) > 0 ? "" :
+                '<p class="subtitle is-6 has-text-danger">
+                    Il n\'y a malheureusement plus de place pour cette Sortie :(
+                    </p>' | raw }}
+            </div>
+        </div>
+        <div class="content">
+            {{ app.user not in sortie.participantsInscrits ? '' :
+            '<p class="has-background-warning-light">Vous êtes déjà inscrit.e à cette sortie</p>' | raw }}
+            <p class="has-background-info-light">
+                DU
+                <time class="has-text-primary">
+                    {{ sortie.dateDebut | format_datetime('full', 'short',locale='fr') }}
+                </time>
+                <br>
+                AU
+                <time class="has-text-primary">
+                    {{ sortie.dateDebut | date_modify('+'~sortie.duree~' min') | format_datetime('full', 'short',locale='fr') }}
+                </time>
+                <br>
+                Durée : {{ sortie.duree }} minutes
+            </p>
+            <p class="has-background-danger-light box">
+                {{ sortie.etat.id == 3 ? '<span class="has-text-danger"> Les inscriptions à cette activité sont closes.</span>' :
+                'Fin des incriptions le ' ~ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}
+            </p>
+            <div class="is-flex is-flex-direction-column">
+                <a href="{{ path('sortie_details', {'id': sortie.id}) }}" class="button">En savoir +</a>
+                {% if app.user == sortie.organisateur %}
+                    <a onclick="return confirm('Êtes vous sur.e de vouloir annuler la sortie ?')"
+                       href="{{ path('sortie_annuler', {'id': sortie.id}) }}"
+                       class="button is-warning">
+                        Annuler la sortie
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
