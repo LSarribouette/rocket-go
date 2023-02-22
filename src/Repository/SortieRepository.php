@@ -39,13 +39,38 @@ class SortieRepository extends ServiceEntityRepository
         }
     }
 
-    public function findWhereRegistered(int $participant_id) {
-        return $this->createQueryBuilder('sortie')
-                    ->leftJoin('sortie.participantsInscrits', 'participants_inscrits')
-                    ->andWhere('participants_inscrits.id LIKE :participant_id')
-                    ->setParameter('participant_id', $participant_id)
-                    ->getQuery()
-                    ->execute();
+    public function findAllOptimized() {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.participantsInscrits', 'participantsInscrits')
+            ->addSelect('participantsInscrits')
+            ->andWhere('s.etat not in (1,7)')
+            ->addOrderBy('s.dateDebut', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function findWhereRegistered(int $participant_id)
+    {
+        // les multiples jointures permettent l'optimisation de la requete
+
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.lieu', 'lieu')
+            ->addSelect('lieu')
+            ->leftJoin('s.site', 'site')
+            ->addSelect('site')
+            ->leftJoin('s.etat', 'etat')
+            ->addSelect('etat')
+            ->leftJoin('s.organisateur', 'organisateur')
+            ->addSelect('organisateur')
+            ->leftJoin('s.participantsInscrits', 'participantsInscrits')
+            ->addSelect('participantsInscrits')
+            ->andWhere('participantsInscrits.id LIKE :participant_id')
+            ->setParameter('participant_id', $participant_id)
+            ->addOrderBy('s.dateDebut', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
     }
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects
@@ -71,6 +96,7 @@ class SortieRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
     public function findAllDateDebutOlderThanAMonth()
     {
         return $this->createQueryBuilder('s')

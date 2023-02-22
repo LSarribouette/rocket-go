@@ -43,9 +43,19 @@
                 <br>
                 Durée : {{ sortie.duree }} minutes
             </p>
-            <p class="has-background-danger-light box">
-                {{ sortie.etat.id == 3 ? '<span class="has-text-danger"> Les inscriptions à cette activité sont closes.</span>' :
-                'Fin des incriptions le ' ~ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}
+            <p class="has-background-warning-light box">
+                {% if sortie.etat.id == 2 %}
+                    <span class="has-text-warning-dark"> Fin des incriptions : <br>
+                    {{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</span>
+                {% elseif sortie.etat.id == 3 %}
+                    <span class="has-text-danger"> Les inscriptions à cette activité sont closes.</span>
+                {% elseif sortie.etat.id == 4 %}
+                    <span class="has-text-link"> La sortie est en cours.</span>
+                {% elseif sortie.etat.id == 5 %}
+                    La sortie est déjà passée.
+                {% elseif sortie.etat.id == 6 %}
+                    <span class="has-text-danger"> La sortie a été annulée...</span>
+                {% endif %}
             </p>
             <div class="is-flex is-flex-direction-column">
                 <a href="{{ path('sortie_details', {'id': sortie.id}) }}" class="button">En savoir +</a>

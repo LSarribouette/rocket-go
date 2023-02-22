@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\ParticipantRepository;
+use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,7 +30,7 @@ class SortieController extends AbstractController
         SortieRepository $sortieRepository,
     ): Response
     {
-        $sorties = $sortieRepository->findAll();
+        $sorties = $sortieRepository->findAllOptimized();
         $now = new \DateTime('now', new DateTimeZone('Europe/Paris'));
 
         return $this->render(
@@ -37,6 +38,21 @@ class SortieController extends AbstractController
             compact("sorties", "now")
         );
     }
+
+    #[Route('/mes-sorties', name: '_messorties')]
+    public function dashboardMesSorties(
+        SortieRepository $sortieRepository,
+    ): Response
+    {
+        $sorties_organisateurice = $sortieRepository->findBy(["organisateur" => $this->getUser()]);
+        $sorties_inscrite = $sortieRepository->findWhereRegistered($this->getUser()->getId());
+
+        return $this->render(
+            'sortie/mes-sorties.html.twig',
+            compact("sorties_organisateurice", "sorties_inscrite")
+        );
+    }
+
     #[isGranted('ROLE_USER')]
     #[Route('/new', name: '_create')]
     public function create(
@@ -177,19 +193,6 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('sortie_details', ['id'=>$id]);
         }
 
-    }
-    #[Route('/mes-sorties', name: '_messorties')]
-    public function dashboardMesSorties(
-        SortieRepository $sortieRepository
-    ): Response
-    {
-        $sorties_organisateurice = $sortieRepository->findBy(["organisateur" => $this->getUser()]);
-        $sorties_inscrite = $sortieRepository->findWhereRegistered($this->getUser()->getId());
-
-        return $this->render(
-            'sortie/mes-sorties.html.twig',
-            compact("sorties_organisateurice", "sorties_inscrite")
-        );
     }
 
     #[Route('/annuler/{id}', name: '_annuler')]
