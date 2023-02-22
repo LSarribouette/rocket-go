@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\ChangePasswordFormType;
 use App\Form\ProfileType;
+use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
 use App\Repository\VilleRepository;
@@ -96,14 +97,15 @@ class HomeController extends AbstractController
     public function adminPanel(
         ParticipantRepository $participantRepository,
         SiteRepository $siteRepository,
-        VilleRepository $villeRepository
+        VilleRepository $villeRepository,
+        LieuRepository $lieuRepository
     ): Response
     {
         return $this->render('home/administration.html.twig', [
             'participants' => $participantRepository->findAll(),
             'sites' => $siteRepository->findAll(),
-            'villes' => $villeRepository->findAll()
+            'villes' => $villeRepository->findAll(),
+            'lieux' => $lieuRepository->findAll()
         ]);
     }
-
 }
