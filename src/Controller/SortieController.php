@@ -2,9 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Etat;
-use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Form\FiltreSiteSortieType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\ParticipantRepository;
@@ -28,14 +27,26 @@ class SortieController extends AbstractController
     #[Route('/', name: '_dashboard')]
     public function dashboard(
         SortieRepository $sortieRepository,
+        SiteRepository $siteRepository,
+        Request $request
     ): Response
     {
-        $sorties = $sortieRepository->findAllOptimized();
         $now = new \DateTime('now', new DateTimeZone('Europe/Paris'));
+        $sites = $siteRepository->findAll();
+        $sorties = $sortieRepository->findAllOptimized();
+
+        $tri = new Sortie();
+        $triSiteForm = $this->createForm(FiltreSiteSortieType::class, $tri);
+        $triSiteForm->handleRequest($request);
+        if($triSiteForm->isSubmitted()) {
+            $sorties = $sortieRepository->findBySiteOptimized($tri->getSite());
+            dump($tri->getSite()->getNom());
+            dump($sorties);
+        }
 
         return $this->render(
             'sortie/dashboard.html.twig',
-            compact("sorties", "now")
+            compact("sorties", "now", "triSiteForm")
         );
     }
 
