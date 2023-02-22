@@ -18,15 +18,16 @@ class Site
     #[ORM\Column(length: 30)]
     private ?string $nom = null;
 
-    #[ORM\ManyToOne(inversedBy: 'site')]
-    private ?Sortie $sorties = null;
-
     #[ORM\OneToMany(mappedBy: 'site', targetEntity: Participant::class)]
     private Collection $participants;
+
+    #[ORM\OneToMany(mappedBy: 'site', targetEntity: Sortie::class)]
+    private Collection $sorties;
 
     public function __construct()
     {
         $this->participants = new ArrayCollection();
+        $this->sorties = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -42,18 +43,6 @@ class Site
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
-
-        return $this;
-    }
-
-    public function getSorties(): ?Sortie
-    {
-        return $this->sorties;
-    }
-
-    public function setSorties(?Sortie $sorties): self
-    {
-        $this->sorties = $sorties;
 
         return $this;
     }
@@ -82,6 +71,36 @@ class Site
             // set the owning side to null (unless already changed)
             if ($participant->getSite() === $this) {
                 $participant->setSite(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sortie>
+     */
+    public function getSorties(): Collection
+    {
+        return $this->sorties;
+    }
+
+    public function addSorty(Sortie $sorty): self
+    {
+        if (!$this->sorties->contains($sorty)) {
+            $this->sorties->add($sorty);
+            $sorty->setSite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSorty(Sortie $sorty): self
+    {
+        if ($this->sorties->removeElement($sorty)) {
+            // set the owning side to null (unless already changed)
+            if ($sorty->getSite() === $this) {
+                $sorty->setSite(null);
             }
         }
 

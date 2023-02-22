@@ -10,27 +10,11 @@ body{
     font-family: "Luciole-Regular";
 }
 
-/*
-body {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 0 15%;
-}
-*/
 main {
     min-height: 100vh;
     height: 100%;
 }
 
-header {
-    justify-content: space-evenly;
-}
-
-nav {
-    text-align: center;
-}
-
-.alert-success {
-    background-color: mistyrose;
-    text-align: center;
+.card {
+    max-width: 400px;
 }

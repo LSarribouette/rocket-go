@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
 use App\Repository\ParticipantRepository;
+use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
@@ -29,14 +30,29 @@ class SortieController extends AbstractController
         SortieRepository $sortieRepository,
     ): Response
     {
-        $sorties = $sortieRepository->findAll();
-        $nowAsDateTimeObject = new \DateTime('now', new DateTimeZone('Europe/Paris'));
+        $sorties = $sortieRepository->findAllOptimized();
+        $now = new \DateTime('now', new DateTimeZone('Europe/Paris'));
 
         return $this->render(
             'sortie/dashboard.html.twig',
-            compact("sorties", "nowAsDateTimeObject")
+            compact("sorties", "now")
         );
     }
+
+    #[Route('/mes-sorties', name: '_messorties')]
+    public function dashboardMesSorties(
+        SortieRepository $sortieRepository,
+    ): Response
+    {
+        $sorties_organisateurice = $sortieRepository->findBy(["organisateur" => $this->getUser()]);
+        $sorties_inscrite = $sortieRepository->findWhereRegistered($this->getUser()->getId());
+
+        return $this->render(
+            'sortie/mes-sorties.html.twig',
+            compact("sorties_organisateurice", "sorties_inscrite")
+        );
+    }
+
     #[isGranted('ROLE_USER')]
     #[Route('/new', name: '_create')]
     public function create(
@@ -46,8 +62,9 @@ class SortieController extends AbstractController
         EtatRepository $etatRepository,
     ): Response
     {
-        $sortie = new Sortie();
-        $sortie->setOrganisateur($this->getUser());
+        $sortie = (new Sortie())
+            ->setOrganisateur($this->getUser())
+            ->setSite($this->getUser()->getSite());
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($rq);
         //recupération de l'organisateur == current user
@@ -89,12 +106,12 @@ class SortieController extends AbstractController
         int $id
     ): Response
     {
-        $nowAsDateTimeObject = new \DateTime('now', new DateTimeZone('Europe/Paris'));
+        $now = new \DateTime('now', new DateTimeZone('Europe/Paris'));
         $sortie = $sortieRepository->findOneBy(["id" => $id]);
         $organisateur = $participantRepository->findOneOrganisateurById($sortie->getOrganisateur());
         return $this->render(
             'sortie/details.html.twig',
-            compact("sortie", "organisateur", "nowAsDateTimeObject")
+            compact("sortie", "organisateur", "now")
         );
     }
     #[Route('/sinscrire/{id}', name: '_inscrireParticipant')]
@@ -107,10 +124,10 @@ class SortieController extends AbstractController
     {
         $sortie = $sortieRepository->findOneBy(["id" => $id]);
         $participant = $participantRepository->findOneBy(["email"=>$this->getUser()->getUserIdentifier()]);
-        $nowAsDateTimeObject = new \DateTime('now', new DateTimeZone('Europe/Paris'));
+        $now = new \DateTime('now', new DateTimeZone('Europe/Paris'));
         $dateClotureInscription = $sortie->getDateCloture();
         //check si la date d'inscription n'est pas dépassé.
-        if($dateClotureInscription < $nowAsDateTimeObject){
+        if($dateClotureInscription < $now){
             //message de type non la date d'inscription est dépassé
             $type = "danger";
             $message = "Vous ne pouvez pas vous inscrire, les inscriptions sont fermées";
@@ -176,19 +193,6 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('sortie_details', ['id'=>$id]);
         }
 
-    }
-    #[Route('/mes-sorties', name: '_messorties')]
-    public function dashboardMesSorties(
-        SortieRepository $sortieRepository
-    ): Response
-    {
-        $sorties_organisateurice = $sortieRepository->findBy(["organisateur" => $this->getUser()]);
-        $sorties_inscrite = $sortieRepository->findWhereRegistered($this->getUser()->getId());
-
-        return $this->render(
-            'sortie/mes-sorties.html.twig',
-            compact("sorties_organisateurice", "sorties_inscrite")
-        );
     }
 
     #[Route('/annuler/{id}', name: '_annuler')]
