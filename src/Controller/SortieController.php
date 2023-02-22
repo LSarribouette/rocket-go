@@ -30,11 +30,11 @@ class SortieController extends AbstractController
     ): Response
     {
         $sorties = $sortieRepository->findAll();
-        $nowAsDateTimeObject = new \DateTime('now', new DateTimeZone('Europe/Paris'));
+        $now = new \DateTime('now', new DateTimeZone('Europe/Paris'));
 
         return $this->render(
             'sortie/dashboard.html.twig',
-            compact("sorties", "nowAsDateTimeObject")
+            compact("sorties", "now")
         );
     }
     #[isGranted('ROLE_USER')]
@@ -46,8 +46,9 @@ class SortieController extends AbstractController
         EtatRepository $etatRepository,
     ): Response
     {
-        $sortie = new Sortie();
-        $sortie->setOrganisateur($this->getUser());
+        $sortie = (new Sortie())
+            ->setOrganisateur($this->getUser())
+            ->setSite($this->getUser()->getSite());
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($rq);
         //recupération de l'organisateur == current user
@@ -89,12 +90,12 @@ class SortieController extends AbstractController
         int $id
     ): Response
     {
-        $nowAsDateTimeObject = new \DateTime('now', new DateTimeZone('Europe/Paris'));
+        $now = new \DateTime('now', new DateTimeZone('Europe/Paris'));
         $sortie = $sortieRepository->findOneBy(["id" => $id]);
         $organisateur = $participantRepository->findOneOrganisateurById($sortie->getOrganisateur());
         return $this->render(
             'sortie/details.html.twig',
-            compact("sortie", "organisateur", "nowAsDateTimeObject")
+            compact("sortie", "organisateur", "now")
         );
     }
     #[Route('/sinscrire/{id}', name: '_inscrireParticipant')]
@@ -107,10 +108,10 @@ class SortieController extends AbstractController
     {
         $sortie = $sortieRepository->findOneBy(["id" => $id]);
         $participant = $participantRepository->findOneBy(["email"=>$this->getUser()->getUserIdentifier()]);
-        $nowAsDateTimeObject = new \DateTime('now', new DateTimeZone('Europe/Paris'));
+        $now = new \DateTime('now', new DateTimeZone('Europe/Paris'));
         $dateClotureInscription = $sortie->getDateCloture();
         //check si la date d'inscription n'est pas dépassé.
-        if($dateClotureInscription < $nowAsDateTimeObject){
+        if($dateClotureInscription < $now){
             //message de type non la date d'inscription est dépassé
             $type = "danger";
             $message = "Vous ne pouvez pas vous inscrire, les inscriptions sont fermées";

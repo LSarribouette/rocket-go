@@ -61,9 +61,6 @@ class Sortie
     #[ORM\JoinColumn(nullable: false)]
     private ?Lieu $lieu = null;
 
-    #[ORM\OneToMany(mappedBy: 'sorties', targetEntity: Site::class)]
-    private Collection $site;
-
     #[ORM\ManyToOne(inversedBy: 'sortiesOrganisees')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Participant $organisateur = null;
@@ -71,11 +68,9 @@ class Sortie
     #[ORM\ManyToMany(targetEntity: Participant::class, inversedBy: 'inscriptions')]
     private Collection $participantsInscrits;
 
-    public function __construct()
-    {
-        $this->site = new ArrayCollection();
-        $this->participantsInscrits = new ArrayCollection();
-    }
+    #[ORM\ManyToOne(inversedBy: 'sorties')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Site $site = null;
 
     public function getId(): ?int
     {
@@ -191,36 +186,6 @@ class Sortie
         return $this;
     }
 
-    /**
-     * @return Collection<int, Site>
-     */
-    public function getSite(): Collection
-    {
-        return $this->site;
-    }
-
-    public function addSite(Site $site): self
-    {
-        if (!$this->site->contains($site)) {
-            $this->site->add($site);
-            $site->setSorties($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSite(Site $site): self
-    {
-        if ($this->site->removeElement($site)) {
-            // set the owning side to null (unless already changed)
-            if ($site->getSorties() === $this) {
-                $site->setSorties(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getOrganisateur(): ?Participant
     {
         return $this->organisateur;
@@ -253,6 +218,18 @@ class Sortie
     public function removeParticipantsInscrit(Participant $participantsInscrit): self
     {
         $this->participantsInscrits->removeElement($participantsInscrit);
+
+        return $this;
+    }
+
+    public function getSite(): ?Site
+    {
+        return $this->site;
+    }
+
+    public function setSite(?Site $site): self
+    {
+        $this->site = $site;
 
         return $this;
     }
