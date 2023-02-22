@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 //TODO : gerer le user connected AVEC LE #[isGranted('ROLE_USER')]
 
@@ -41,6 +42,7 @@ class SortieController extends AbstractController
     public function create(
         EntityManagerInterface $em,
         Request $rq,
+        ValidatorInterface $validator,
         EtatRepository $etatRepository,
     ): Response
     {
@@ -53,76 +55,24 @@ class SortieController extends AbstractController
         //récupération de l'état "créée" qu'on attribue par défaut à une sortie quand on crée un formulaire
         $etat = $etatRepository->findOneBy(["libelle"=>"créée"]);
         $sortie->setEtat($etat);
+
         if($sortieForm->isSubmitted()){
-//            $dureeInterval = $sortieForm->get("duree")->getData();
-//            $duree = $dureeInterval['days']*24*60 + $dureeInterval['hours']*60 + $dureeInterval['minutes'];
-//            $sortie->setDuree($duree);
-
-//          verif de la cohérence des dates
-            $dateDebutEvenement = $sortieForm->get('dateDebut')->getData();
-            $nowAsDateTimeObject = new \DateTime('now', new DateTimeZone('Europe/Paris'));
-            $dateClotureInscription = $sortieForm->get('dateCloture')->getData();
-//          la date de Debut d'évenement ne peut pas etre inferieure à maintenant
-            if($dateDebutEvenement < $nowAsDateTimeObject){
+            $errors = $validator->validate($sortie);
+            if (count($errors) > 0) {
                 $type = "danger";
                 $this->addFlash($type, "Le formulaire n'a pas pu être envoyé. ");
-                $message = "La date de Début de l'évênement ne peux pas être antérieur à maintenant !";
-                $this->addFlash($type, $message);
-                return $this->redirectToRoute('sortie_create');
+                foreach ($errors as $error) {
+                    $errorMessages[] = $error->getPropertyPath().' - '.$error->getMessage();
+                }
+                foreach ($errorMessages as $errorMessage) {
+                    $this->addFlash($type, $errorMessage);
+                }
             }
-//          La date de Cloture d'inscription ne peut pas etre inferieure à maintenant
-            if($dateClotureInscription < $nowAsDateTimeObject){
-                $type = "danger";
-                $this->addFlash($type, "Le formulaire n'a pas pu être envoyé. ");
-                $message = "La date de Cloture d'Inscription de l'évênement ne peux pas être antérieur à maintenant !";
-                $this->addFlash($type, $message);
-                return $this->redirectToRoute('sortie_create');
-            }
-//          dateClotureInscription ne peut pas être supérieur à dateDebutEvenement
-            if($dateClotureInscription > $dateDebutEvenement){
-                $type = "danger";
-                $this->addFlash($type, "Le formulaire n'a pas pu être envoyé. ");
-                $message = "La date de Cloture d'Inscription ne peut pas être supérieur à la date de début d'évênement !";
-                $this->addFlash($type, $message);
-                return $this->redirectToRoute('sortie_create');
-            }
-//          Check de la durée
-            $dureeEvenement = $sortieForm->get('duree')->getData();
-//          la durée ne peut pas etre négative
-            if($dureeEvenement <= 0){
-                $type = "danger";
-                $this->addFlash($type, "Le formulaire n'a pas pu être envoyé. ");
-                $message = "La durée de l'êvenement doit être strictement positive !";
-                $this->addFlash($type, $message);
-                return $this->redirectToRoute('sortie_create');
-            }
-            //la durée ne peut pas excéder un mois (en minute)
-            $dureeEvenement = $sortieForm->get('duree')->getData();
-            if($dureeEvenement > 43800){
-                $type = "danger";
-                $this->addFlash($type, "Le formulaire n'a pas pu être envoyé. ");
-                $message = "La durée de l'êvenement ne peut pas excéder un mois !";
-                $this->addFlash($type, $message);
-                return $this->redirectToRoute('sortie_create');
-            }
-//          Check du nombre de participant
-            $nbInscriptionsMax = $sortieForm->get('nbInscriptionsMax')->getData();
-            if($nbInscriptionsMax <= 1){
-                $type = "danger";
-                $this->addFlash($type, "Le formulaire n'a pas pu être envoyé. ");
-                $message = "Vous allez vraiment y aller tout seul ?";
-                $this->addFlash($type, $message);
-                return $this->redirectToRoute('sortie_create');
-            }
-
-//TODO : facto ce code de type tartine, voire faire une function checkForm()
-//TODO : faudrait checker de pas pouvoir créer DEUX FOIS la m
-
             if($sortieForm->isValid()){
                 $em->persist($sortie);
                 $em->flush();
                 $type = "success";
-                $this->addFlash($type, "La sortie a bien été créée :) ");
+                $this->addFlash($type, "La sortie a bien été créée, n'oubliez pas de la publier dans [Mes sorties] :) ");
                 return $this->redirectToRoute('sortie_dashboard');
             }
         }
