@@ -39,11 +39,12 @@ class SortieType extends AbstractType
                     'html5' => true,
                     'widget' => 'single_text'
                 ])
-            ->add('duree',IntegerType::class)
-//             ->add('duree',
-            /* TODO : handle la duree avec un intervaltype ce serait trop stylé
+//            ->add('duree',IntegerType::class)
+             ->add('duree',
             DateIntervalType::class,
             [
+                //pour pas que ça gueule avec ce qu'attend l'ORM (on receptionne la durée dans le controller et on lui change son type
+                'mapped'=>false,
                 'widget'      => 'integer', // render a text field for each part
                 // 'input'    => 'string',  // if you want the field to return a ISO 8601 string back to you
                 // customize which text boxes are shown
@@ -59,7 +60,7 @@ class SortieType extends AbstractType
                     'minutes' => 'Minutes',
                 ]
             ])
- */
+
             ->add('dateCloture',
                 type: DateTimeType::class,
                 options: [

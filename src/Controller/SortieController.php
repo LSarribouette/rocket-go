@@ -101,6 +101,13 @@ class SortieController extends AbstractController
         $sortie->setEtat($etat);
 
         if($sortieForm->isSubmitted()){
+
+            //gestion de la durée
+            //on récup le DateIntervalType
+            $dureeToConvert = $sortieForm['duree']->getData();
+            //on le convertis en integer (minutes) à persist
+            $duree = 60*((24*$dureeToConvert->d)+$dureeToConvert->h)+$dureeToConvert->i;
+            $sortie->setDuree($duree);
             $errors = $validator->validate($sortie);
             if (count($errors) > 0) {
                 $type = "danger";
@@ -113,30 +120,29 @@ class SortieController extends AbstractController
                 }
             }
             if($sortieForm->isValid()){
+                if($sortieForm['urlPhoto']->getData() != null){
+                    //upload file
+                    //handling the file
+                    /** @var UploadedFile $uploadedFile */
+                    $uploadedFile = $sortieForm['urlPhoto']->getData();
+                    $directory = $this->getParameter('kernel.project_dir').'/public/assets/media/user_files/sortie_picture';
+                    $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension();
+                    //try catch le move du fichier dans le user_files/sortie-picture directory
+                    try {
+                        $uploadedFile->move($directory, $newFilename);
+                    } catch (FileException $e){
+                        echo $e->getMessage();
+                        $type = "danger";
+                        $this->addFlash($type, "Erreur lors de l'upload");
+                        return $this->redirectToRoute('sortie_create');
+                    }
+                    //on finit par renseigner l'urlPhoto dans la Sortie, je passe par strstr pour virer le chemin absolu
+                    $url = strstr($directory."/".pathinfo($newFilename)['basename'], 'assets/');
+                    $sortie->setUrlPhoto($url);
 
-                //upload file
-
-                //handling the file
-                /** @var UploadedFile $uploadedFile */
-                $uploadedFile = $sortieForm['urlPhoto']->getData();
-                $directory = $this->getParameter('kernel.project_dir').'/public/assets/media/user_files/sortie_picture';
-                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension();
-                //try catch le move du fichier dans le user_files/sortie-picture directory
-                try {
-                    $uploadedFile->move($directory, $newFilename);
-                } catch (FileException $e){
-                    echo $e->getMessage();
-                    $type = "danger";
-                    $this->addFlash($type, "Erreur lors de l'upload");
-                    return $this->redirectToRoute('sortie_create');
                 }
-                //on finit par renseigner l'urlPhoto dans la Sortie, je passe par strstr pour virer le chemin absolu
-                $url = strstr($directory."/".pathinfo($newFilename)['basename'], 'assets/');
-                $sortie->setUrlPhoto($url);
-                //fin des travaux
-
                 $em->persist($sortie);
                 $em->flush();
                 $type = "success";
