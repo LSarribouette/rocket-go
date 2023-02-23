@@ -1,7 +1,10 @@
 <div
 {# etat : ouverte #}
 {% if sortie.etat.id == 2 %}
-        class="is-align-self-stretch box card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-primary-light is-outlined-primary"
+    {{ app.user not in sortie.participantsInscrits ?
+    'class= "is-align-self-stretch box card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-primary-light is-outlined-primary"'
+    :
+    'class="is-align-self-stretch box card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-primary-light is-outlined-info"' }}
 {# etat : cloturée #}
 {% elseif sortie.etat.id == 3 or sortie.etat.id == 6 %}
         class="is-align-self-stretch card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-danger-light"
@@ -46,7 +49,7 @@
         </div>
         <div class="content">
             {{ app.user not in sortie.participantsInscrits ? '' :
-            '<p class="has-background-warning-light">Vous êtes déjà inscrit.e à cette sortie</p>' | raw }}
+            '<p class="has-background-info has-text-white has-text-centered"><i class="fa-regular fa-square-check"></i> Vous êtes déjà inscrit.e à cette sortie</p>' | raw }}
             <p class="has-background-info-light">
                 DU
                 <time class="has-text-primary">
@@ -62,12 +65,12 @@
             </p>
             <p class="has-background-warning-light box">
                 {% if sortie.etat.id == 2 %}
-                    <span class="has-text-warning-dark"> Fin des incriptions : <br>
+                    <span class="has-text-warning-dark is-underlined"><i class="fa-regular fa-clock"></i> Fin des incriptions : <br>
                     {{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</span>
                 {% elseif sortie.etat.id == 3 %}
                     <span class="has-text-danger"> Les inscriptions à cette activité sont closes.</span>
                 {% elseif sortie.etat.id == 4 %}
-                    <span class="has-text-link"> La sortie est en cours.</span>
+                    <span class="has-text-link"> <i class="fa-solid fa-rocket"></i> La sortie est en cours.</span>
                 {% elseif sortie.etat.id == 5 %}
                     <span class="has-text-dark"> La sortie est terminée.</span>
                 {% elseif sortie.etat.id == 6 %}

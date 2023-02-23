@@ -20,18 +20,38 @@
             Cette sortie est Archivée.. </span>
     {% endif %}
     </summary>
-    <div>
+    <div class="is-outlined-black p-1">
+        <div class="m-auto has-text-centered has-background-primary-light">
+            <a class="button is-info"
+               href="{{ path('sortie_details', {'id': sortie.id}) }}">Détails
+            </a>
+            {% if sortie.etat.id == 2 %}
+                <a onclick="return confirm('Êtes vous sur.e de vouloir annuler la sortie ?')"
+                   href="{{ path('sortie_annuler', {'id': sortie.id}) }}"
+                   class="button is-warning">
+                    Annuler la sortie
+                </a>
+            {% endif %}
+            {% if sortie.etat.id == 1 or sortie.etat.id == 6 %}
+                <a class="button is-primary"
+                   href="{{ path('sortie_publier', {'id': sortie.id}) }}">
+                    {% if sortie.etat.id == 6 %}
+                        RE -
+                    {% endif %}
+                    PUBLIEZ VOTRE SORTIE
+                </a>
+            {% endif %}
+        </div>
     <table class="table">
         <thead>
         <tr>
             <th>Nom</th>
             <th>Organisateurice</th>
-            <th>Etat</th>
             <th>Site</th>
             <th>Lieu</th>
             <th>Nombre de participants</th>
             <th>Date de début</th>
-            <th>Date de clôture</th>
+            <th>Clôture des inscription</th>
             <th></th>
         </tr>
         </thead>
@@ -43,33 +63,11 @@
             {% else %}
             <td>VOUS-MEME</td>
             {% endif %}
-            <td>{{ sortie.etat.libelle }}</td>
             <td>{{ sortie.organisateur.site.nom }}</td>
             <td>{{ sortie.lieu.nom }}</td>
             <td>{{ sortie.participantsInscrits | length }}/{{ sortie.nbInscriptionsMax }}</td>
             <td>{{ sortie.dateDebut | format_datetime('full', 'short',locale='fr') }}</td>
             <td>{{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</td>
-            <td class="is-flex is-flex-direction-column is-justify-content-space-evenly	">
-            <a class="button is-light is-primary"
-                   href="{{ path('sortie_details', {'id': sortie.id}) }}">Détails
-            </a>
-                {% if sortie.etat.id == 2 %}
-            <a onclick="return confirm('Êtes vous sur.e de vouloir annuler la sortie ?')"
-               href="{{ path('sortie_annuler', {'id': sortie.id}) }}"
-               class="button is-warning">
-                Annuler la sortie
-            </a>
-            {% endif %}
-            {% if sortie.etat.id == 1 or sortie.etat.id == 6 %}
-                <a class="button is-primary"
-                   href="{{ path('sortie_publier', {'id': sortie.id}) }}">
-                    {% if sortie.etat.id == 6 %}
-                    RE -
-                    {% endif %}
-                    PUBLIEZ VOTRE SORTIE
-                </a>
-            {% endif %}
-            </td>
         </tr>
         </tbody>
     </table>

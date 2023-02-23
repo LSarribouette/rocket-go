@@ -6,15 +6,14 @@
         <p class="title">
             Détails de la sortie : {{ sortie.nom|capitalize }}
         </p>
-        <a class="button box has-text-centered" href="{{ path('sortie_create') }}">Proposer une Sortie ! </a>
         {% if sortie.nbInscriptionsMax - (sortie.participantsInscrits | length) > 0 %}
+            {% if sortie.etat.id == 2 %}
             <div class="notification is-primary is-light">
-                <p class="subtitle">
-                    Il reste <strong
-                            class="has-text-primary"> {{ sortie.nbInscriptionsMax - (sortie.participantsInscrits | length) }} </strong>
-                    places !
-                </p>
+                <p class="subtitle"> Il reste <strong class="has-text-primary">
+                {{ sortie.nbInscriptionsMax - (sortie.participantsInscrits | length) }}
+                </strong> places ! </p>
             </div>
+            {% endif %}
         {% else %}
             <div class="notification is-danger is-light">
                 <p class="subtitle">
