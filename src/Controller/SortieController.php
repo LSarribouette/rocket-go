@@ -18,6 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+
 
 //TODO : gerer le user connected AVEC LE #[isGranted('ROLE_USER')]
 
@@ -81,6 +85,8 @@ class SortieController extends AbstractController
         Request $rq,
         ValidatorInterface $validator,
         EtatRepository $etatRepository,
+        SortieRepository $sortieRepository,
+        SluggerInterface $slugger
     ): Response
     {
         $sortie = (new Sortie())
@@ -107,6 +113,30 @@ class SortieController extends AbstractController
                 }
             }
             if($sortieForm->isValid()){
+
+                //upload file
+
+                //handling the file
+                /** @var UploadedFile $uploadedFile */
+                $uploadedFile = $sortieForm['urlPhoto']->getData();
+                $directory = $this->getParameter('kernel.project_dir').'/public/assets/media/user_files/sortie_picture';
+                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$uploadedFile->guessExtension();
+                //try catch le move du fichier dans le user_files/sortie-picture directory
+                try {
+                    $uploadedFile->move($directory, $newFilename);
+                } catch (FileException $e){
+                    echo $e->getMessage();
+                    $type = "danger";
+                    $this->addFlash($type, "Erreur lors de l'upload");
+                    return $this->redirectToRoute('sortie_create');
+                }
+                //on finit par renseigner l'urlPhoto dans la Sortie, je passe par strstr pour virer le chemin absolu
+                $url = strstr($directory."/".pathinfo($newFilename)['basename'], 'assets/');
+                $sortie->setUrlPhoto($url);
+                //fin des travaux
+
                 $em->persist($sortie);
                 $em->flush();
                 $type = "success";

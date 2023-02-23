@@ -105,14 +105,13 @@ class SortieType extends AbstractType
             ->add('urlPhoto',
                 FileType::class,
                 [
+                    'mapped'=>false,
                     'label'=>'Ajouter une image ?',
                     'required' => false,
                     'constraints' => [
                         new File([
                             //'maxSize' => '1024k',
                             'mimeTypes' => [
-                                'application/pdf',
-                                'application/x-pdf',
                                 'image/png',
                                 'image/jpeg',
                                 'image/webp',
