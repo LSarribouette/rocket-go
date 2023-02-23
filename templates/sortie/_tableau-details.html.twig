@@ -51,7 +51,7 @@
             <th>Organisateurice</th>
             <th>Site</th>
             <th>Lieu</th>
-            <th>Nombre de participants</th>
+            <th>participant.es</th>
             <th>Date de début</th>
             <th>Clôture des inscription</th>
             <th></th>
@@ -81,6 +81,12 @@
             <div class="notification has-background-primary-light">
                 {{ sortie.descriptionInfos }}
             </div>
+            <p>
+                <span class="is-underlined">Jusqu'au</span> :
+                <time class="has-text-primary-dark">
+                    {{ sortie.dateDebut | date_modify('+'~sortie.duree~' min') | format_datetime('full', 'short',locale='fr') }}
+                </time>
+            </p>
         </div>
     </div>
 </details>

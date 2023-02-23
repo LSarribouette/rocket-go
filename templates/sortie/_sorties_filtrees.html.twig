@@ -2,20 +2,20 @@
 {# etat : ouverte #}
 {% if sortie.etat.id == 2 %}
     {{ app.user not in sortie.participantsInscrits ?
-    'class= "is-align-self-stretch box card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-primary-light is-outlined-primary"'
+    'class= "is-centered box card column is-6-desktop is-6-tablet is-12-mobile block my-2 mx-auto has-background-primary-light is-outlined-primary"'
     :
-    'class="is-align-self-stretch box card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-primary-light is-outlined-info"' }}
+    'class="is-centered box card column is-6-desktop is-6-tablet is-12-mobile block my-2 mx-auto has-background-primary-light is-outlined-info"' }}
 {# etat : cloturée #}
 {% elseif sortie.etat.id == 3 or sortie.etat.id == 6 %}
-        class="is-align-self-stretch card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-danger-light"
+        class="is-centered card column is-6-desktop is-6-tablet is-12-mobile block my-2 mx-auto has-background-danger-light"
 {# etat : en cours #}
 {% elseif sortie.etat.id == 4 %}
-        class="is-align-self-stretch card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-link-light"
+        class="is-centered card column is-6-desktop is-6-tablet is-12-mobile block my-2 mx-auto has-background-link-light"
 {# etat : passée #}
 {% elseif sortie.etat.id == 5 %}
-    class="is-align-self-stretch card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-warning-light"
+    class="is-centered card column is-6-desktop is-6-tablet is-12-mobile block my-2 mx-auto has-background-warning-light"
 {% else %}
-    class="is-align-self-stretch card column is-5-desktop is-7-tablet is-12-mobile block m-2"
+    class="is-centered card column is-6-desktop is-6-tablet is-12-mobile block my-2 mx-auto"
 {% endif%}
 >
 
