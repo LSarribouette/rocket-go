@@ -1,0 +1,92 @@
+<div
+{# etat : ouverte #}
+{% if sortie.etat.id == 2 %}
+    {{ app.user not in sortie.participantsInscrits ?
+    'class= "is-align-self-stretch box card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-primary-light is-outlined-primary"'
+    :
+    'class="is-align-self-stretch box card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-primary-light is-outlined-info"' }}
+{# etat : cloturée #}
+{% elseif sortie.etat.id == 3 or sortie.etat.id == 6 %}
+        class="is-align-self-stretch card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-danger-light"
+{# etat : en cours #}
+{% elseif sortie.etat.id == 4 %}
+        class="is-align-self-stretch card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-link-light"
+{# etat : passée #}
+{% elseif sortie.etat.id == 5 %}
+    class="is-align-self-stretch card column is-5-desktop is-7-tablet is-12-mobile block m-2 has-background-warning-light"
+{% else %}
+    class="is-align-self-stretch card column is-5-desktop is-7-tablet is-12-mobile block m-2"
+{% endif%}
+>
+
+    <div class="card-image p-4">
+        <figure class="image">
+            {% if sortie.urlPhoto and sortie.urlPhoto != "null" %}
+                <img type=file src="{{ asset(sortie.urlPhoto) }}" alt="Photo présentant la sortie">
+            {% else %}
+                <img src="{{ asset('assets/media/RocketWhale.svg') }}" alt="Photo par défaut présentant une sortie">
+            {% endif %}
+        </figure>
+    </div>
+    <div class="card-content">
+        <div class="media">
+            <div class="media-content">
+                <p class="title is-4 has-text-link">{{ sortie.nom | capitalize }}</p>
+                <p class="subtitle is-6 has-text-info-dark">
+                    {{ app.user == sortie.organisateur ? "<strong> Vous </strong> avez planifié cette sortie" :
+                    "Organisateur.e : " ~ sortie.organisateur.pseudo }}
+                </p>
+                <p class="subtitle is-6">{{ sortie.organisateur.site.nom }}</p>
+                <p class="subtitle is-6 has-text-primary-dark">
+                    nombre de place réservées: {{ sortie.participantsInscrits | length }}
+                    <strong>/</strong> {{ sortie.nbInscriptionsMax }}
+                </p>
+                {{ sortie.nbInscriptionsMax - (sortie.participantsInscrits | length) > 0 ? "" :
+                '<p class="subtitle is-6 has-text-danger">
+                    Il n\'y a malheureusement plus de place pour cette Sortie :(
+                    </p>' | raw }}
+            </div>
+        </div>
+        <div class="content">
+            {{ app.user not in sortie.participantsInscrits ? '' :
+            '<p class="has-background-info has-text-white has-text-centered"><i class="fa-regular fa-square-check"></i> Vous êtes déjà inscrit.e à cette sortie</p>' | raw }}
+            <p class="has-background-info-light">
+                DU
+                <time class="has-text-primary">
+                    {{ sortie.dateDebut | format_datetime('full', 'short',locale='fr') }}
+                </time>
+                <br>
+                AU
+                <time class="has-text-primary">
+                    {{ sortie.dateDebut | date_modify('+'~sortie.duree~' min') | format_datetime('full', 'short',locale='fr') }}
+                </time>
+                <br>
+                Durée : {{ sortie.duree }} minutes
+            </p>
+            <p class="has-background-warning-light box">
+                {% if sortie.etat.id == 2 %}
+                    <span class="has-text-warning-dark is-underlined"><i class="fa-regular fa-clock"></i> Fin des incriptions : <br>
+                    {{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</span>
+                {% elseif sortie.etat.id == 3 %}
+                    <span class="has-text-danger"> Les inscriptions à cette activité sont closes.</span>
+                {% elseif sortie.etat.id == 4 %}
+                    <span class="has-text-link"> <i class="fa-solid fa-rocket"></i> La sortie est en cours.</span>
+                {% elseif sortie.etat.id == 5 %}
+                    <span class="has-text-dark"> La sortie est terminée.</span>
+                {% elseif sortie.etat.id == 6 %}
+                    <span class="has-text-danger"> La sortie a été annulée...</span>
+                {% endif %}
+            </p>
+            <div class="is-flex is-flex-direction-column">
+                <a href="{{ path('sortie_details', {'id': sortie.id}) }}" class="button">En savoir +</a>
+                {% if app.user == sortie.organisateur %}
+                    <a href="{{ path('sortie_messorties') }}"
+                       class="button is-primary">
+                        Gérer mes sortie
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<hr>

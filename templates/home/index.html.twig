@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Accueil{% endblock %}
+
+{% block body %}
+    <h1 class="title">WELCOME ON ROCKET GO 🚀</h1>
+
+    <img class="box" src="{{ asset('assets/media/RocketWhale.svg') }}">
+
+    <div class="tile is-ancestor">
+        <div class="tile is-vertical is-8">
+            <div class="tile">
+                <div class="tile is-parent is-vertical">
+                    <article class="tile is-child notification is-primary">
+                        <p class="title">C'EST</p>
+                        <p class="subtitle">je suis</p>
+                    </article>
+                    <article class="tile is-child notification is-info">
+                        <p class="title">COMPLETEMENT</p>
+                        <p class="subtitle">profondément</p>
+                    </article>
+                </div>
+                <div class="tile is-parent">
+                    <article class="tile is-child notification is-info">
+                        <p class="title has-text-primary-light">ROCKET-GO</p>
+                        <p class="subtitle">désolé</p>
+                        <figure class="image is-square">
+                            <img src="{{ asset('assets/media/RocketWhale.svg') }}">
+                        </figure>
+                    </article>
+                </div>
+            </div>
+            <div class="tile is-parent">
+                <article class="tile is-child notification is-link">
+                    <p class="title">OVERKILL</p>
+                    <p class="subtitle">...</p>
+                    <div class="content">
+                        <!-- Content -->
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="tile is-parent">
+            <article class="tile is-child notification is-primary">
+                <div class="content">
+                    <p class="title">COMME DESIGN.</p>
+                    <p class="subtitle">il était tard.</p>
+                    <div class="content">
+                        <!-- Content -->
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+
+{% endblock %}

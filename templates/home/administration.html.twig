@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Administration{% endblock %}
+
+{% block body %}
+    <h1 class="title">Panneau d'administration</h1>
+    <div class="mb-2">
+        <button class="button is-light" onclick="afficheListe('participants')" id="participantsBouton">Gérer les participants</button>
+        <button class="button is-light" onclick="afficheListe('sites')" id="sitesBouton">Gérer les sites</button>
+        <button class="button is-light" onclick="afficheListe('villes')" id="villesBouton">Gérer les villes</button>
+        <button class="button is-light" onclick="afficheListe('lieux')" id="lieuxBouton">Gérer les lieux</button>
+    </div>
+    <section class="is-flex is-flex-direction-row is-flex-wrap-wrap">
+        <div id="participants" hidden class="m-2">
+            {% include 'participant/index.html.twig' %}
+        </div>
+        <div id="sites" hidden class="m-2">
+            {% include 'site/index.html.twig' %}
+        </div>
+        <div id="villes" hidden class="m-2">
+            {% include 'ville/index.html.twig' %}
+        </div>
+        <div id="lieux" hidden class="m-2">
+            {% include 'lieu/index.html.twig' %}
+        </div>
+    </section>
+
+    <script src="{{ asset('assets/javascript/hide-unhide-div.js') }}"></script>
+{% endblock %}

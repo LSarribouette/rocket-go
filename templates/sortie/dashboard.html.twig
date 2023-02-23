@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Sortir avec l'ENI !{% endblock %}
+
+{% block body %}
+    <section class="hero is-primary">
+        <div class="hero-body">
+            <p class="title">Hello, quand est-ce qu'on sort ? 🚀</p>
+            <time id="datetime-now" class="has-text-info">{{ now | format_datetime('full', 'short', locale='fr', timezone=false) }}</time>
+            <p class="subtitle">
+                <strong class=" title"> {{ sorties | length }} </strong> sorties organisées récemment par le Réseau !
+            </p>
+            <a class="title is-4 button box has-text-centered has-text-primary" href="{{ path('sortie_create') }}">Proposer une Sortie ! </a>
+        </div>
+    </section>
+
+    <section class="">
+        <div class="box columns">
+            <div class="column">
+                {{ form_start(triSiteForm) }}
+                <div id="nom" class="column">
+                    <label class="label">
+                        {{ form_label(triSiteForm.site) }}
+                    </label>
+                    <div class="control has-icons-left has-icons-right">
+                        {{ form_widget(triSiteForm.site, {'attr': {'class':'input'} }) }}
+                        <span class="icon is-small is-left">
+                            <i class="fa-solid fa-angle-down"></i>
+                        </span>
+                    </div>
+                </div>
+                <div id="submit" class="">
+                    <button class="button control is-primary">Filtrer par site</button>
+                </div>
+                {{ form_end(triSiteForm) }}
+            </div>
+            <div class="column">
+                {{ form_start(triLieuForm) }}
+                <div id="nom" class="column">
+                    <label class="label">
+                        {{ form_label(triLieuForm.lieu) }}
+                    </label>
+                    <div class="control has-icons-left has-icons-right">
+                        {{ form_widget(triLieuForm.lieu, {'attr': {'class':'input'} }) }}
+                        <span class="icon is-small is-left">
+                            <i class="fa-solid fa-angle-down"></i>
+                        </span>
+                    </div>
+                </div>
+                <div id="submit" class="">
+                    <button class="button control is-primary">Filtrer par lieu</button>
+                </div>
+                {{ form_end(triSiteForm) }}
+            </div>
+        </div>
+        <a class="button mb-4" href="{{ path('sortie_dashboard') }}">Toutes les sorties</a>
+    </section>
+    <section class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly columns ">
+        {% for sortie in sorties %}
+            {% include('sortie/_sorties_filtrees.html.twig') %}
+        {% endfor %}
+    </section>
+    <hr>
+{% endblock %}

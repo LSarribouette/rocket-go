@@ -1,0 +1,39 @@
+{% block body %}
+    <section class="box">
+        <h2 class="title is-6">Liste des lieux</h2>
+
+        <table class="table is-hoverable">
+            <thead>
+            <tr>
+                <th>Identifiant</th>
+                <th>Nom</th>
+                <th>Rue</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for lieu in lieux %}
+                <tr>
+                    <td>{{ lieu.id }}</td>
+                    <td>{{ lieu.nom }}</td>
+                    <td>{{ lieu.rue }}</td>
+                    <td>{{ lieu.latitude }}</td>
+                    <td>{{ lieu.longitude }}</td>
+                    <td>
+                        <a class="button is-light is-small is-primary" href="{{ path('app_lieu_show', {'id': lieu.id}) }}">Détails</a>
+                        <a class="button is-light is-small is-warning" href="{{ path('app_lieu_edit', {'id': lieu.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Il n'y a pas de lieux.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a class="button is-light is-success" href="{{ path('app_lieu_new') }}">Ajouter un nouveau lieu</a>
+    </section>
+{% endblock %}

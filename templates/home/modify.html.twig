@@ -1,0 +1,110 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {{ form_start(profileForm) }}
+    <div id="errors" class="my-custom-class-for-errors">
+        {# TODO: error management #}
+        {{ form_errors(profileForm) }}
+    </div>
+
+    <div id="nom" class="field column is-one-fifth">
+        <label class="label">
+            {{ form_label(profileForm.nom) }}
+        </label>
+        <div class="control has-icons-left has-icons-right">
+            {{ form_widget(profileForm.nom, {'attr': {'class':'input'} }) }}
+            <span class="icon is-small is-left">
+                <i class="fa-solid fa-pen"></i>
+            </span>
+        </div>
+    </div>
+
+    <div id="prenom" class="field column is-one-fifth">
+        <label class="label">
+            {{ form_label(profileForm.prenom) }}
+        </label>
+        <div class="control has-icons-left has-icons-right">
+            {{ form_widget(profileForm.prenom, {'attr': {'class':'input'} }) }}
+            <span class="icon is-small is-left">
+                <i class="fa-solid fa-pen"></i>
+            </span>
+        </div>
+    </div>
+
+    <div id="pseudo" class="field column is-one-fifth">
+        <label class="label">
+            {{ form_label(profileForm.pseudo) }}
+        </label>
+        <div class="control has-icons-left has-icons-right">
+            {{ form_widget(profileForm.pseudo, {'attr': {'class':'input'} }) }}
+            <span class="icon is-small is-left">
+                <i class="fa-solid fa-pen"></i>
+            </span>
+        </div>
+    </div>
+
+    <div id="email" class="field column is-one-fifth">
+        <label class="label">
+            {{ form_label(profileForm.email) }}
+        </label>
+        <div class="control has-icons-left has-icons-right">
+            {{ form_widget(profileForm.email, {'attr': {'class':'input'} }) }}
+            <span class="icon is-small is-left">
+                <i class="fa-solid fa-pen"></i>
+            </span>
+        </div>
+    </div>
+
+    <div id="site" class="field column is-one-fifth">
+        <label class="label">
+            {{ form_label(profileForm.site) }}
+        </label>
+        <div class="select">
+            {{ form_widget(profileForm.site, {'attr': {'class':'input'} }) }}
+        </div>
+    </div>
+
+    <div id="telephone" class="field column is-one-fifth">
+        <label class="label">
+            {{ form_label(profileForm.telephone) }}
+        </label>
+        <div class="control has-icons-left has-icons-right">
+            {{ form_widget(profileForm.telephone, {'attr': {'class':'input'} }) }}
+            <span class="icon is-small is-left">
+                <i class="fa-solid fa-pen"></i>
+            </span>
+        </div>
+    </div>
+
+    <div class="box column is-one-third">
+        <label class="file-label">
+            {{ form_label(profileForm.urlPhoto) }}
+        </label>
+        <div class="file">
+        <span class="file-cta">
+                <span class="file-icon">
+                <i class="fas fa-upload"></i>
+                </span>
+                <span class="file-label">
+                {{ form_widget(profileForm.urlPhoto, {'attr': {'class':'file'} }) }}
+                </span>
+        </span>
+        </div>
+    </div>
+
+    <div id="submit" class="field is-grouped">
+        <div type="submit" class="control">
+            {{ form_widget(profileForm.submit, {'attr': {'class':'button is-primary'} }) }}
+        </div>
+        <a class="button" href="{{ path('home_profile') }}">Retour</a>
+
+    </div>
+
+    {{ form_end(profileForm) }}
+
+{% endblock %}
+
+
+{% block title %}{{ parent() }} - Modifier mon profil{% endblock %}
+

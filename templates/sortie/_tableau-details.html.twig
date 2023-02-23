@@ -1,0 +1,86 @@
+<details class="box">
+    <summary>
+    {% if sortie.etat.id == 1 %}
+        <span class="title is-5 has-text-info">{{ sortie.nom|capitalize }} : Publiez votre sortie ! <i class="fa-solid fa-rocket"></i></span>
+    {% elseif sortie.etat.id == 2 %}
+        <span class="title is-5 has-text-link-dark">{{ sortie.nom|capitalize }} : La sortie est ouverte ! <i class="fa-solid fa-file-signature"></i></span>
+    {% elseif sortie.etat.id == 3 %}
+        <span class="title is-5 has-text-info">{{ sortie.nom|capitalize }} : les inscriptions sont closes  <i class="fa-regular fa-calendar-xmark"></i> </span>
+    {% elseif sortie.etat.id == 4 %}
+        <span class="title is-5 has-text-success">{{ sortie.nom|capitalize }} : sortie en cours <i class="fa-solid fa-spinner"></i> </span>
+    {% elseif sortie.etat.id == 5 %}
+        <span class="has-text-dark has-background-warning-light">{{ sortie.nom|capitalize }} :
+            <br><i class="fa-solid fa-flag-checkered"></i>
+            Cette sortie est Terminée.. </span>
+    {% elseif sortie.etat.id == 6 %}
+        <span class=" has-background-danger-light">{{ sortie.nom|capitalize }} :
+            <br> <i class="fa-solid fa-comment-slash"></i>
+            Vous avez Annulé cette sortie </span>
+    {% elseif sortie.etat.id == 7 %}
+        <span class="has-text-dark has-background-warning-light">{{ sortie.nom|capitalize }} :
+            <br><i class="fa-solid fa-box-archive"></i>
+            Cette sortie est Archivée.. </span>
+    {% endif %}
+    </summary>
+    <div class="is-outlined-black p-1">
+        <div class="m-auto has-text-centered has-background-primary-light">
+            <a class="button is-info"
+               href="{{ path('sortie_details', {'id': sortie.id}) }}">Détails
+            </a>
+            {% if sortie.etat.id == 2 %}
+                <a onclick="return confirm('Êtes vous sur.e de vouloir annuler la sortie ?')"
+                   href="{{ path('sortie_annuler', {'id': sortie.id}) }}"
+                   class="button is-warning">
+                    Annuler la sortie
+                </a>
+            {% endif %}
+            {% if sortie.etat.id == 1 or sortie.etat.id == 6 %}
+                <a class="button is-primary"
+                   href="{{ path('sortie_publier', {'id': sortie.id}) }}">
+                    {% if sortie.etat.id == 6 %}
+                        RE -
+                    {% endif %}
+                    PUBLIEZ VOTRE SORTIE
+                </a>
+            {% endif %}
+        </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Organisateurice</th>
+            <th>Site</th>
+            <th>Lieu</th>
+            <th>Nombre de participants</th>
+            <th>Date de début</th>
+            <th>Clôture des inscription</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>{{ sortie.nom }}</td>
+            {% if app.user is not same as(sortie.organisateur) %}
+            <td>{{ sortie.organisateur.pseudo }}</td>
+            {% else %}
+            <td>VOUS-MEME</td>
+            {% endif %}
+            <td>{{ sortie.organisateur.site.nom }}</td>
+            <td>{{ sortie.lieu.nom }}</td>
+            <td>{{ sortie.participantsInscrits | length }}/{{ sortie.nbInscriptionsMax }}</td>
+            <td>{{ sortie.dateDebut | format_datetime('full', 'short',locale='fr') }}</td>
+            <td>{{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</td>
+        </tr>
+        </tbody>
+    </table>
+        <div class="container">
+            <p class="is-underlined"> Description :
+            </p>
+            <p class="">
+            </p>
+            <div class="notification has-background-primary-light">
+                {{ sortie.descriptionInfos }}
+            </div>
+        </div>
+    </div>
+</details>

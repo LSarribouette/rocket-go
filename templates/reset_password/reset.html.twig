@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Réinitialiser le mot de passe{% endblock %}
+
+{% block body %}
+    <h1 class="title">Réinitialiser le mot de passe</h1>
+    {{ form_start(resetForm) }}
+        {{ form_widget(resetForm) }}
+    {{ form_end(resetForm) }}
+{% endblock %}

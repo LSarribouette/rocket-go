@@ -1,0 +1,32 @@
+html {
+    height: 100%;
+}
+body{
+    min-height: 100%;
+    font-family: Luciole-Regular, Tahoma, Verdana, sans-serif;
+}
+@font-face {
+    src: url("fonts/Luciole-Regular.ttf");
+    font-family: "Luciole-Regular";
+}
+
+main {
+    min-height: 100vh;
+    height: 100%;
+}
+
+.card {
+    max-width: 400px;
+}
+.is-outlined-primary{
+    border: 2px solid #00d1b2 !important;
+}
+.is-outlined-success{
+    border: 2px solid #23d160 !important;
+}
+.is-outlined-info{
+ border: 2px solid #209cee !important;
+}
+.is-outlined-black{
+    border: 2px solid black !important;
+}

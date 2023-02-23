@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<section class="hero">
+    <div class="hero-body">
+        <p class="title">
+            Détails de la sortie : {{ sortie.nom|capitalize }}
+        </p>
+        {% if sortie.nbInscriptionsMax - (sortie.participantsInscrits | length) > 0 %}
+            {% if sortie.etat.id == 2 %}
+            <div class="notification is-primary is-light">
+                <p class="subtitle"> Il reste <strong class="has-text-primary">
+                {{ sortie.nbInscriptionsMax - (sortie.participantsInscrits | length) }}
+                </strong> places ! </p>
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="notification is-danger is-light">
+                <p class="subtitle">
+                    Il n'y a malheureusement plus de place :(
+                </p>
+            </div>'
+        {% endif %}
+        {{ app.user not in sortie.participantsInscrits ? '' :
+        '<p class="has-background-warning-light">Vous êtes déjà inscrit.e à cette sortie</p>' | raw }}
+    </div>
+</section>
+
+<div class="box columns">
+    <div class="card-image column">
+        <figure class="image">
+            {% if sortie.urlPhoto and sortie.urlPhoto != "null" %}
+                <img type=file src="{{ asset(sortie.urlPhoto) }}" alt="Photo présentant la sortie">
+            {% else %}
+                <img src="{{ asset('assets/media/RocketWhale.svg') }}" alt="Photo par défaut présentant une sortie">
+            {% endif %}
+        </figure>
+    </div>
+    <div class="card-content column">
+        <div class="media">
+            <div class="media-left">
+                <figure id="avatar" class="image  is-128x128">
+                    {% if sortie.organisateur.urlPhoto and sortie.organisateur.urlPhoto != "null" %}
+                        <img width="150px" type=file src="{{ asset(sortie.organisateur.urlPhoto) }}"
+                             alt="Avatar de l'utilisateur">
+                    {% else %}
+                        <img width="150px" src="{{ asset('assets/media/user_files/defaultAvatar.png') }}"
+                             alt="Avatar par défaut de l'utilisateur">
+                    {% endif %}
+                </figure>
+            </div>
+            <div class="media-content">
+                <p class="title is-4 has-text-link">{{ sortie.nom|capitalize }}</p>
+                <p class="has-text-primary mt-2">
+                    {% if app.user == sortie.organisateur %}
+                        <strong>Vous</strong> avez organisé cette sortie
+                    {% else %}
+                        Organisée par : <a href="mailto:{{ organisateur.email }}">{{ organisateur.pseudo }}</a>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="content mt-2">
+            <p class="subtitle is-6 has-text-danger mt-4">
+                Nombre de place réservées :
+                {{ sortie.participantsInscrits | length }} / {{ sortie.nbInscriptionsMax }}
+            </p>
+            <p>Description : {{ sortie.descriptionInfos }}</p>
+            <p>Rendez-vous : {{ sortie.lieu.nom }}, {{ sortie.lieu.ville.nom }}</p>
+            <p class="has-background-{{ random(['danger', 'warning', 'success', 'primary']) }}-light mt-2">
+                DU
+                <time class="has-text-primary">{{ sortie.dateDebut | format_datetime('full', 'short',locale='fr') }}</time>
+                <br>
+                AU
+                <time class="has-text-danger">
+                    {{ sortie.dateDebut | date_modify('+'~sortie.duree~' min') | format_datetime('full', 'short',locale='fr') }}
+                </time>
+            </p>
+        </div>
+
+        <p class="has-background-warning-light box">
+            {% if sortie.etat.id == 1 %}
+            <span class="has-text-danger"> Cette sortie a été créée mais n'est pas encore publiée...</span>
+            {% elseif sortie.etat.id == 2 %}
+                <span class="has-text-warning-dark"> Fin des incriptions : <br>
+                    {{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</span>
+            {% elseif sortie.etat.id == 3 %}
+                <span class="has-text-danger"> Les inscriptions à cette activité sont closes.</span>
+            {% elseif sortie.etat.id == 4 %}
+                <span class="has-text-link"> La sortie est en cours.</span>
+            {% elseif sortie.etat.id == 5 %}
+                La sortie est déjà passée.
+            {% elseif sortie.etat.id == 6 %}
+                <span class="has-text-danger"> La sortie a été annulée...</span>
+            {% endif %}
+        </p>
+
+        {% if sortie.nbInscriptionsMax - (sortie.participantsInscrits | length) > 0
+            and app.user not in sortie.participantsInscrits
+            and sortie.etat.libelle == "ouverte" %}
+            <a class="button" href="{{ path('sortie_inscrireParticipant', {'id': sortie.id}) }}">
+                S'inscrire !
+            </a>
+        {% endif %}
+
+        {% if sortie.nbInscriptionsMax - (sortie.participantsInscrits | length) <= 0 %}
+            <a class="button is-danger" title="Disabled button" disabled>Il n'y a plus de place</a>
+        {% endif %}
+
+        {% if app.user in sortie.participantsInscrits %}
+            <a class="button is-danger" title="Disabled button" disabled>Vous etes déjà inscrit.e</a>
+            <a class="button" href="{{ path('sortie_desistementParticipant', {'id': sortie.id}) }}">Se Désister</a>
+        {% endif %}
+
+        <a class="button" href="{{ path('sortie_dashboard') }}">Retourner sur le Dashboard</a>
+
+        {% if app.user == sortie.organisateur %}
+            <a onclick="return confirm('Êtes vous sur.e de vouloir annuler la sortie ?')"
+               href="{{ path('sortie_annuler', {'id': sortie.id}) }}"
+               class="button is-warning">
+                Annuler la sortie
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block title %}{{ parent() }} - Détails d'une sortie{% endblock %}
+

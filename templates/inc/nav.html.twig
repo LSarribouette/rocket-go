@@ -1,0 +1,41 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img src="{{ asset('assets/media/favicon-team-rocket-02.jpg') }}" alt="logo">
+        </a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="menu-links">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+        <div id="menu-links" class="navbar-menu" >
+            <div class="navbar-start">
+
+                {% if app.user %}
+                    <a class="navbar-item" href="{{ path('sortie_dashboard') }}">Toutes les sorties</a>
+                    <a class="navbar-item" href="{{ path('sortie_messorties') }}">Mes sorties</a>
+                    <a class="navbar-item" href="{{ path('home_profile') }}">Mon profil</a>
+                    {% if is_granted("ROLE_ADMIN") %}
+                        <a class="navbar-item" href="{{ path('home_administration') }}">[Administrer]</a>
+                    {% endif %}
+                {% endif %}
+                {% if not app.user %}
+                    <a  class="navbar-item" href="{{ path('app_login') }}">Toutes les sorties</a>
+                {% endif %}
+            </div>
+            <div class="navbar-item">Bonjour {% if app.user %} {{ app.user.pseudo }}{% endif %} !</div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        {% if app.user %}
+                            <a class="button is-warning" href="{{ path('app_logout') }}">Me déconnecter</a>
+                        {% endif %}
+                        {% if not app.user %}
+                            <a  class="button is-primary" href="{{ path('app_login') }}">Me connecter</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+</nav>
