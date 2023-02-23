@@ -4,6 +4,8 @@
         <span class="title is-5 has-text-info">{{ sortie.nom|capitalize }} : Publiez votre sortie ! <i class="fa-solid fa-rocket"></i></span>
     {% elseif sortie.etat.id == 2 %}
         <span class="title is-5 has-text-link-dark">{{ sortie.nom|capitalize }} : La sortie est ouverte ! <i class="fa-solid fa-file-signature"></i></span>
+    {% elseif sortie.etat.id == 3 %}
+        <span class="title is-5 has-text-info">{{ sortie.nom|capitalize }} : les inscriptions sont closes  <i class="fa-regular fa-calendar-xmark"></i> </span>
     {% elseif sortie.etat.id == 4 %}
         <span class="title is-5 has-text-success">{{ sortie.nom|capitalize }} : sortie en cours <i class="fa-solid fa-spinner"></i> </span>
     {% elseif sortie.etat.id == 5 %}
