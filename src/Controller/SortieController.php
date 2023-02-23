@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+use App\Form\FiltreLieuSortieType;
 use App\Form\FiltreSiteSortieType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
@@ -36,6 +37,7 @@ class SortieController extends AbstractController
         $sorties = $sortieRepository->findAllOptimized();
 
         $tri = new Sortie();
+
         $triSiteForm = $this->createForm(FiltreSiteSortieType::class, $tri);
         $triSiteForm->handleRequest($request);
         if($triSiteForm->isSubmitted()) {
@@ -44,9 +46,17 @@ class SortieController extends AbstractController
             dump($sorties);
         }
 
+        $triLieuForm = $this->createForm(FiltreLieuSortieType::class, $tri);
+        $triLieuForm->handleRequest($request);
+        if($triLieuForm->isSubmitted()) {
+            $sorties = $sortieRepository->findByLieuOptimized($tri->getLieu());
+            dump($tri->getLieu()->getNom());
+            dump($sorties);
+        }
+
         return $this->render(
             'sortie/dashboard.html.twig',
-            compact("sorties", "now", "triSiteForm")
+            compact("sorties", "now", "sites", "triSiteForm", "triLieuForm")
         );
     }
 
