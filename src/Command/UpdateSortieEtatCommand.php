@@ -23,10 +23,11 @@ class UpdateSortieEtatCommand extends Command
     private $em;
     private $sortieRepository;
     private $etatRepository;
-    private $_ARCHIVE_ETAT_ID;
-    private $_CLOTURE_ETAT_ID;
+    private $_ARCHIVEE_ETAT_ID;
+    private $_CLOTUREE_ETAT_ID;
     private $_ENCOURS_ETAT_ID;
     private $_PASSE_ETAT_ID;
+    private $_ANNULEE_ETAT_ID;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -35,10 +36,11 @@ class UpdateSortieEtatCommand extends Command
     )
     {
         //variables des ID correspondant à l'entité Etat facile à atteindre
-        $this->_ARCHIVE_ETAT_ID= $etatRepository->findOneBy(['libelle'=>'archivée'])->getId();
-        $this->_PASSE_ETAT_ID= $etatRepository->findOneBy(['libelle'=>'passée'])->getId();
-        $this->_CLOTURE_ETAT_ID= $etatRepository->findOneBy(['libelle'=>'clôturée'])->getId();
-        $this->_ENCOURS_ETAT_ID= $etatRepository->findOneBy(['libelle'=>'en cours'])->getId();
+        $this->_ARCHIVEE_ETAT_ID = $etatRepository->findOneBy(['libelle'=>'archivée'])->getId();
+        $this->_PASSE_ETAT_ID = $etatRepository->findOneBy(['libelle'=>'passée'])->getId();
+        $this->_CLOTUREE_ETAT_ID = $etatRepository->findOneBy(['libelle'=>'clôturée'])->getId();
+        $this->_ENCOURS_ETAT_ID = $etatRepository->findOneBy(['libelle'=>'en cours'])->getId();
+        $this->_ANNULEE_ETAT_ID = $etatRepository->findOneBy(['libelle'=>'annulée'])->getId();
         $this->em = $em;
         $this->sortieRepository = $sortieRepository;
         $this->etatRepository = $etatRepository;
@@ -119,13 +121,14 @@ class UpdateSortieEtatCommand extends Command
     protected function cloture(OutputInterface $output){
         $output->writeln('--------- CLOTURE MOD ---------');
         $olderThanClotureSorties = $this->sortieRepository->findAllOlderThanCloture();
-        //checking if already cloturée, en cours, passée, or archivée
+        //checking if already cloturée, en cours, passée, annulée or archivée
         foreach ($olderThanClotureSorties as $s) {
             if (
-                $s->getEtat()->getId() != $this->_CLOTURE_ETAT_ID
+                $s->getEtat()->getId() != $this->_CLOTUREE_ETAT_ID
                 && $s->getEtat()->getId() != $this->_ENCOURS_ETAT_ID
+                && $s->getEtat()->getId() != $this->_ANNULEE_ETAT_ID
                 && $s->getEtat()->getId() != $this->_PASSE_ETAT_ID
-                && $s->getEtat()->getId() != $this->_ARCHIVE_ETAT_ID){
+                && $s->getEtat()->getId() != $this->_ARCHIVEE_ETAT_ID){
                 $olderThanClotureSortiesToUpdate[] = $s;
             }
         }
@@ -133,7 +136,7 @@ class UpdateSortieEtatCommand extends Command
             $output->writeln('No entry to update as "cloturée" ');
         } else{
             foreach ($olderThanClotureSortiesToUpdate as $toClotureSortie){
-                $this->updateSortieWithNewEtat($toClotureSortie->getId(), $this->_CLOTURE_ETAT_ID);
+                $this->updateSortieWithNewEtat($toClotureSortie->getId(), $this->_CLOTUREE_ETAT_ID);
                 $output->writeln('entry found : '. $toClotureSortie->getNom() .' - UPDATING as "cloturée"...');
             }
             $output->writeln(count($olderThanClotureSortiesToUpdate).' entries updated as "cloturées" ');
@@ -159,10 +162,12 @@ class UpdateSortieEtatCommand extends Command
             }
         }
         if(!empty($activeSorties)){
+            //checking if already en cours, cloturée, passée, annulée or archivée
             foreach ($activeSorties as $s) {
                 if ($s->getEtat()->getId() != $this->_ENCOURS_ETAT_ID
                     && $s->getEtat()->getId() != $this->_PASSE_ETAT_ID
-                    && $s->getEtat()->getId() != $this->_ARCHIVE_ETAT_ID){
+                    && $s->getEtat()->getId() != $this->_ANNULEE_ETAT_ID
+                    && $s->getEtat()->getId() != $this->_ARCHIVEE_ETAT_ID){
                     $activeSortiesToUpdate[] = $s;
                 }
             }
@@ -198,8 +203,13 @@ class UpdateSortieEtatCommand extends Command
             };
         }
         if(!empty($finishedSorties)){
+            //checking if already passée, annulée or archivée
             foreach ($finishedSorties as $s) {
-                if ($s->getEtat()->getId() != $this->_PASSE_ETAT_ID && $s->getEtat()->getId() != $this->_ARCHIVE_ETAT_ID){
+                if (
+                    $s->getEtat()->getId() != $this->_PASSE_ETAT_ID
+                    && $s->getEtat()->getId() != $this->_ARCHIVEE_ETAT_ID
+                    && $s->getEtat()->getId() != $this->_ANNULEE_ETAT_ID
+                ){
                     $ToFinishSorties[] = $s;
                 }
             }
@@ -226,7 +236,7 @@ class UpdateSortieEtatCommand extends Command
         $olderThanAMonthSorties = $this->sortieRepository->findAllDateDebutOlderThanAMonth();
         //checking if already Archivée
         foreach ($olderThanAMonthSorties as $s) {
-            if ($s->getEtat()->getId() != $this->_ARCHIVE_ETAT_ID){
+            if ($s->getEtat()->getId() != $this->_ARCHIVEE_ETAT_ID){
                 $olderThanAMonthAndNotArchivedSorties[] = $s;
             }
         }
@@ -234,7 +244,7 @@ class UpdateSortieEtatCommand extends Command
             $output->writeln('No entry OLDER THAN 1 MONTH at this time');
         } else{
             foreach ($olderThanAMonthAndNotArchivedSorties as $oldSortie){
-                $this->updateSortieWithNewEtat($oldSortie->getId(), $this->_ARCHIVE_ETAT_ID);
+                $this->updateSortieWithNewEtat($oldSortie->getId(), $this->_ARCHIVEE_ETAT_ID);
                 $output->writeln('entry found :'. $oldSortie->getNom() .' - UPDATING as "archivée"...');
             }
             $output->writeln(count($olderThanAMonthAndNotArchivedSorties).' entries updated as "archivée" ');

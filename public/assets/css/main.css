@@ -18,3 +18,6 @@ main {
 .card {
     max-width: 400px;
 }
+.is-outlined-primary{
+    border: 2px solid #00d1b2 !important;
+}
