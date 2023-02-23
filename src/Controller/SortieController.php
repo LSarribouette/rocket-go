@@ -231,7 +231,25 @@ class SortieController extends AbstractController
         $type = "success";
         $message = "Vous avez annulé la sortie";
         $this->addFlash($type, $message);
-        return $this->redirectToRoute('sortie_dashboard');
+        return $this->redirectToRoute('sortie_messorties');
+    }
+
+    #[Route('/publier/{id}', name:'_publier')]
+    public function publier(
+        SortieRepository $sortieRepository,
+        EntityManagerInterface $em,
+        EtatRepository $etatRepository,
+        int $id
+    ): Response
+    {
+        $sortie = $sortieRepository->findOneBy(["id" => $id]);
+        $etat = $etatRepository->findOneBy(["libelle"=>"ouverte"]);
+        $sortie->setEtat($etat);
+        $em->flush();
+        $type = "success";
+        $message = "Vous avez publiée votre sortie ! Elle sera visible sur le réseau :)";
+        $this->addFlash($type, $message);
+        return $this->redirectToRoute('sortie_messorties');
     }
 
 }

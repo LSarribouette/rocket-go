@@ -3,14 +3,14 @@
 {% block title %}{{ parent() }} - Sortir avec l'ENI !{% endblock %}
 
 {% block body %}
-    <section class="hero">
+    <section class="hero is-primary">
         <div class="hero-body">
-            <p class="title">Hello, quand est-ce qu'on sort ?</p>
+            <p class="title">Hello, quand est-ce qu'on sort ? 🚀</p>
             <time id="datetime-now" class="has-text-info">{{ now | format_datetime('full', 'short', locale='fr', timezone=false) }}</time>
-            <a class="title button box has-text-centered" href="{{ path('sortie_create') }}">Proposer une Sortie ! </a>
             <p class="subtitle">
-                <strong class="has-text-primary"> {{ sorties | length }} </strong> sorties organisées récemment par le Réseau !
+                <strong class=" title"> {{ sorties | length }} </strong> sorties organisées récemment par le Réseau !
             </p>
+            <a class="title is-4 button box has-text-centered has-text-primary" href="{{ path('sortie_create') }}">Proposer une Sortie ! </a>
         </div>
     </section>
 
@@ -55,10 +55,10 @@
         </div>
         <a class="button mb-4" href="{{ path('sortie_dashboard') }}">Toutes les sorties</a>
     </section>
-
-    <section class="is-flex is-flex-direction-row is-flex-wrap-wrap is-justify-content-space-evenly is-align-items-stretch box">
+    <section class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly columns ">
         {% for sortie in sorties %}
             {% include('sortie/_sorties_filtrees.html.twig') %}
         {% endfor %}
     </section>
+    <hr>
 {% endblock %}
