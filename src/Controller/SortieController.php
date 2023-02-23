@@ -199,26 +199,18 @@ class SortieController extends AbstractController
     public function annuler(
         SortieRepository $sortieRepository,
         EntityManagerInterface $em,
-        ParticipantRepository $participantRepository,
+        EtatRepository $etatRepository,
         int $id
     ): Response
     {
         $sortie = $sortieRepository->findOneBy(["id" => $id]);
-        //je récupère tous les participants à cette sortie
-        $participants = $sortie->getParticipantsInscrits();
-        //je supprime les participants, pour vider la table d'association sortie_participant
-        foreach ($participants as $participant) {
-            $sortie->removeParticipantsInscrit($participant);
-            $em->flush();
-        }
-        $sortieRepository->remove($sortie);
+        $etat = $etatRepository->findOneBy(["libelle"=>"annulée"]);
+        $sortie->setEtat($etat);
         $em->flush();
-
         $type = "success";
-        $message = "Vous avez supprimé le sortie";
+        $message = "Vous avez annulé la sortie";
         $this->addFlash($type, $message);
         return $this->redirectToRoute('sortie_dashboard');
-
     }
 
 }

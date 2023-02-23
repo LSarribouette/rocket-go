@@ -74,7 +74,9 @@
                 <time class="has-text-primary">{{ sortie.dateDebut | format_datetime('full', 'short',locale='fr') }}</time>
                 <br>
                 AU
-                <time class="has-text-danger">{{ sortie.dateCloture | format_datetime('full', 'short',locale='fr') }}</time>
+                <time class="has-text-danger">
+                    {{ sortie.dateDebut | date_modify('+'~sortie.duree~' min') | format_datetime('full', 'short',locale='fr') }}
+                </time>
             </p>
         </div>
 
