@@ -28,11 +28,11 @@
 
 <div class="box columns">
     <div class="card-image column">
-        <figure class="image is-4by3">
+        <figure class="image">
             {% if sortie.urlPhoto and sortie.urlPhoto != "null" %}
-                <img src="{{ sortie.urlPhoto }}" alt="Photo présentant la sortie">
+                <img type=file src="{{ asset(sortie.urlPhoto) }}" alt="Photo présentant la sortie">
             {% else %}
-                <img src="https://picsum.photos/400/300" alt="Photo par défaut présentant une sortie">
+                <img src="{{ asset('assets/media/RocketWhale.svg') }}" alt="Photo par défaut présentant une sortie">
             {% endif %}
         </figure>
     </div>
