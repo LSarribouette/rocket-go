@@ -72,6 +72,45 @@ class SortieRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
+
+    public function findBySiteOptimized($siteChoisi) {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.lieu', 'lieu')
+            ->addSelect('lieu')
+            ->leftJoin('s.site', 'site')
+            ->addSelect('site')
+            ->leftJoin('s.etat', 'etat')
+            ->addSelect('etat')
+            ->leftJoin('s.participantsInscrits', 'participantsInscrits')
+            ->addSelect('participantsInscrits')
+            ->andWhere('s.site = :site_choisi')
+            ->setParameter('site_choisi', $siteChoisi)
+            ->andWhere('s.etat not in (1,7)')
+            ->addOrderBy('s.dateDebut', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    public function findByLieuOptimized($lieuChoisi) {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.lieu', 'lieu')
+            ->addSelect('lieu')
+            ->leftJoin('s.site', 'site')
+            ->addSelect('site')
+            ->leftJoin('s.etat', 'etat')
+            ->addSelect('etat')
+            ->leftJoin('s.participantsInscrits', 'participantsInscrits')
+            ->addSelect('participantsInscrits')
+            ->andWhere('s.lieu = :lieu_choisi')
+            ->setParameter('lieu_choisi', $lieuChoisi)
+            ->andWhere('s.etat not in (1,7)')
+            ->addOrderBy('s.dateDebut', 'DESC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
 //    /**
 //     * @return Sortie[] Returns an array of Sortie objects
 //     */
