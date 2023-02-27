@@ -55,10 +55,9 @@
         </div>
         <a class="button mb-4" href="{{ path('sortie_dashboard') }}">Toutes les sorties</a>
     </section>
-    <section class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly columns ">
+    <section class="is-flex is-flex-wrap-wrap is-justify-content-space-evenly columns">
         {% for sortie in sorties %}
             {% include('sortie/_sorties_filtrees.html.twig') %}
         {% endfor %}
     </section>
-    <hr>
 {% endblock %}
